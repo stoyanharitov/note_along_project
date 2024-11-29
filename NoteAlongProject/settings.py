@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from decouple import config
 from pathlib import Path
+from django.urls import reverse_lazy
+
+import NoteAlongProject
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +32,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+CUSTOM_APPS =['NoteAlongProject.accounts']
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -36,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+] + CUSTOM_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,6 +73,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'NoteAlongProject.wsgi.application'
 
+#Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'NoteAlongProject.accounts.backends.EmailOrUsernameLoginBackend',  # custom authentication with email or username
+
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -121,7 +131,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_REDIRECT_URL = reverse_lazy('index')

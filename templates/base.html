@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Along</title>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-music-note"></i>
+        </div>
+        {% if user.is_authenticated %}
+            <nav class="nav-links">
+                <a href="#">Profile</a>
+                <a href="#">Music</a>
+                <a href="#">Festivals</a>
+                <a href="#">About</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </nav>
+        {% else %}
+            <nav class="nav-links">
+                <a href="{% url 'signup' %}">Signup</a>
+                <a href="{% url 'login' %}">Login</a>
+                <a href="#">About</a>
+            </nav>
+        {% endif %}
+    </header>
+
+    <!-- Page content below -->
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
+
+
+

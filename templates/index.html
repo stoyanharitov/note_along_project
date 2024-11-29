@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="random">
+    
+    {% if user.is_authenticated %}
+        <p>Hello Beautiful people of music!!!!</p>
+    {% else %}
+        <p>Feel free to log in or signup ;)</p>
+    {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,79 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Basic body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('https://img.freepik.com/free-vector/vector-abstract-musical-background-vector-illustration_206725-619.jpg?t=st=1732913303~exp=1732916903~hmac=fbd092646316a87ba1552c00857d58c0f6cd5ddd47e3ec960055b3ced059ef87&amp');  /* Set the image URL */
+    background-size: cover;  /* Ensure the image covers the whole page */
+    background-position: center center;  /* Center the image */
+    background-attachment: fixed;  /* Keep the background fixed when scrolling */
+}
+
+
+/* Navbar container */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;  /* Dark background */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;  /* Distribute space between logo and links */
+    align-items: center;
+    z-index: 1000;  /* Ensure navbar stays on top */
+}
+
+/* Styling for logo */
+.logo a {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+/* Navigation links container */
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+/* Styling for navigation links */
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+/* Hover effect for links */
+.nav-links a:hover {
+    color: #f1f1f1;  /* Lighter color when hovering */
+}
+
+/* Adjust content so it doesn't go under the navbar */
+.content {
+    margin-top: 60px;  /* Space for the navbar */
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 36px;
+}
+
+.content p {
+    font-size: 18px;
+}
+
+.random p {
+    text-align: center;
+    color: #f1f1f1;
+    font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    font-size: 3rem;
+}
