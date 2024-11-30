@@ -14,6 +14,12 @@ body {
     background-attachment: fixed;  /* Keep the background fixed when scrolling */
 }
 
+/* P styling */
+p {
+    color: #a07ccd;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
 
 /* Navbar container */
 .navbar {
@@ -21,21 +27,28 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #333;  /* Dark background */
+    background-color: black;  /* Dark background */
     color: white;
-    padding: 10px 20px;
+    padding: 2px 10px;
     display: flex;
     justify-content: space-between;  /* Distribute space between logo and links */
     align-items: center;
     z-index: 1000;  /* Ensure navbar stays on top */
+    margin-bottom: 2px;
 }
 
 /* Styling for logo */
 .logo a {
-    font-size: 24px;
+    font-size: 10px;
     font-weight: bold;
     color: white;
     text-decoration: none;
+}
+
+.logo-img img {
+    width: 1rem;
+    height: auto;
+    margin-left: 5em;
 }
 
 /* Navigation links container */
@@ -48,7 +61,7 @@ body {
 .nav-links a {
     color: white;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 2em;
     transition: color 0.3s ease;
 }
 
@@ -76,4 +89,78 @@ body {
     color: #f1f1f1;
     font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
     font-size: 3rem;
+}
+
+/* Posts list styling */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #1E1E1E;
+    border-radius: 10px;
+    margin: 10px 0;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+li:hover {
+    transform: translateY(-5px); /* Hover effect for posts */
+}
+
+/* Post title and description */
+li h3 {
+    color: #D1A7FF; /* Light purple title */
+    font-size: 20px;
+    margin: 0;
+}
+
+li p {
+    color: #B0B0B0; /* Light grey for text */
+    font-size: 16px;
+}
+
+/* Genre styling */
+strong {
+    color: #D1A7FF;
+}
+
+span {
+    background-color: #444; /* Dark background for genres */
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 3px;
+    font-size: 14px;
+    color: #D1A7FF; /* Light purple text for genres */
+}
+
+/* Link styling */
+a {
+    color: #D1A7FF;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #B07CFF; /* Lighter purple on hover */
+}
+
+/* Styling for h1 - Main Headings */
+h1 {
+    color: #D1A7FF; /* Light purple for headings */
+    font-size: 36px; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    text-align: center; /* Center aligned */
+    margin-top: 20px; /* Add top margin for spacing */
+    margin-bottom: 10px; /* Add bottom margin for spacing */
+    text-transform: uppercase; /* Transform to uppercase for emphasis */
+    letter-spacing: 2px; /* Spacing between letters for a modern look */
+}
+
+p {
+    color: #D1A7FF;
+    text-decoration: none;
+    transition: color 0.2s ease;
 }

@@ -1,11 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="random">
     
-    {% if user.is_authenticated %}
-        <p>Hello Beautiful people of music!!!!</p>
+{% if user.is_authenticated %}
+    {% if last_name and first_name %}
+        <h1>Hello {{ first_name }} {{ last_name }}</h1>
+    {% elif first_name %}
+        <h1>Hello {{ first_name }}</h1>
     {% else %}
-        <p>Feel free to log in or signup ;)</p>
+        <h1>Hello {{ profile.user.username }}</h1>
     {% endif %}
-    </div>
+    
+    <a href="{% url 'post-create' %}">Create a post</a>
+    
+    {% if posts %}
+        <p>These posts may interest you</p>
+        <ul>
+        {% for post in posts %}
+            <li>
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content }}</p>
+                <p><strong>Genres:</strong> 
+                    {% for genre in post.genres.all %}
+                        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No posts found with your preferred genres.</p>
+    {% endif %}
+{% else %}
+    <p>You are not logged in. Please <a href="{% url 'login' %}">log in</a> to view personalized posts.</p>
+    <p>If you don't have an account you can <a href="{% url 'signup' %}">sign up</a> for free to join our music world!</p>
+{% endif %}
+
 {% endblock %}

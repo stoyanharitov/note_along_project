@@ -1,0 +1,67 @@
+/* Profile container styling */
+.profile-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #1e1e2d; /* Dark purple background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    padding: 20px;
+}
+
+/* Header */
+.profile-container h1 {
+    color: #ffffff;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #4b0082; /* Dark purple accent */
+    padding-bottom: 10px;
+}
+
+/* Profile picture */
+.profile-container img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 50%;
+    border: 4px solid #4b0082; /* Dark purple border */
+    width: 150px;
+    height: 150px;
+}
+
+/* Profile details */
+.profile-container p {
+    font-size: 1.2em;
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #b3b3b3;
+}
+
+.profile-container p strong {
+    color: #e6e6e6;
+}
+
+/* Button */
+.profile-container a {
+    display: block;
+    text-align: center;
+    background-color: #4b0082; /* Dark purple button */
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    margin: 20px auto 0;
+    width: fit-content;
+    transition: background-color 0.3s;
+}
+
+.profile-container a:hover {
+    background-color: #6610f2; /* Lighter purple on hover */
+    color: #e6e6e6;
+}
+
+.profile-container div strong{
+    color: darkorchid;
+}

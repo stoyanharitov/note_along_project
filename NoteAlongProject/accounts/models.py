@@ -13,3 +13,6 @@ class Profile(models.Model):
 # need to create a custom migration for the genres in choices file
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name

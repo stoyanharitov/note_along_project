@@ -1,0 +1,28 @@
+#Note Along 🎵
+
+Note Along is a Django-based web application where users can explore music genres, post about their favorite bands, find festivals, and manage personal calendars for events they're attending.
+
+---
+
+## Features
+
+- User registration and authentication (login with username or email).
+- Explore music genres and bands.
+- Create, edit, and delete posts with comments.
+- Search for festivals and events.
+- Personal calendar management with event tagging.
+
+---
+
+## Technologies Used
+
+- **Python**: Version 3.12
+- **Django**: Version 4.x
+- **PostgreSQL**: Database for storing user and music data.
+- **Custom CSS design**: For responsive front-end design.
+- **FullCalendar.js**: Interactive calendar for event management.
+
+---
+
+## Setup and Installation
+- Link to a Google docs file with .env information separated and not imported for security reasons: https://docs.google.com/document/d/1Z3CB9aTzKArfaPrKY4y38-9WOSFmixcE7N5DTpPNd4M/edit?usp=sharing
