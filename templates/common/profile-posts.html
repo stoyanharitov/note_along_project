@@ -1,25 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-    
-{% if user.is_authenticated %}
-    {% if last_name and first_name %}
-        <h1>Hello {{ first_name }} {{ last_name }}</h1>
-    {% elif first_name %}
-        <h1>Hello {{ first_name }}</h1>
-    {% else %}
-        <h1>Hello {{ username }}</h1>
-    {% endif %}
-    
-    <a href="{% url 'post-create' %}">Create a post</a>
-    
-    {% if posts %}
-        <p>These posts may interest you</p>
+
+
+
+{% if posts %}
+        <h1>Here is what you've posted</h1>
         <ul>
         {% for post in posts %}
             <li>
                 <h3>{{ post.title }}</h3>
                 <p>{{ post.content }}</p>
-                <p>Author: {{ post.author.username}}</p>  {#  add author anchor with link to user profile  #}
                 <p><strong>Genres:</strong>
                     {% for genre in post.genres.all %}
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
@@ -31,9 +21,7 @@
                         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                     </button>
                 <a href="{% url 'post-details' post.pk %}" class="btn btn-primary">Details</a>
-                {% if post.author == user %}
-                    <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
-                {% endif %}
+                <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
             </li>
         {% endfor %}
         </ul>
@@ -42,24 +30,20 @@
         <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
-                    <a href="/?page={{ page_obj.previous_page_number }}">previous</a>
+                    <a href="/profile/posts/?page={{ page_obj.previous_page_number }}">previous</a>
                 {% endif %}
                 <span class="page-current">
                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
                 </span>
                 {% if page_obj.has_next %}
-                    <a href="/?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="/profile/posts/?page={{ page_obj.next_page_number }}">next</a>
                 {% endif %}
             </span>
         </div>
                 
         {% endif %}
     {% else %}
-        <p>No posts found with your preferred genres.</p>
+        <h1>Seems like you have not created any posts yet. You can create your first post now! </h1>
     {% endif %}
-{% else %}
-    <p>You are not logged in. Please <a href="{% url 'login' %}">log in</a> to view personalized posts.</p>
-    <p>If you don't have an account you can <a href="{% url 'signup' %}">sign up</a> for free to join our music world!</p>
-{% endif %}
-    
+
 {% endblock %}

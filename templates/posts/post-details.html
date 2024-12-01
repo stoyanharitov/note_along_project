@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+    
+<h1>{{ post.title }}</h1>
+<p>By {{ post.author.username }} | {{ post.created_at }}</p>
+<p>{{ post.content }}</p>
+    
+{% if user.is_authenticated %}
+    <button class="like-btn" data-post-id="{{ post.id }}" data-url="{% url 'like-post' %}">
+        <i class="fa fa-heart{% if request.user in post.likes.all %} liked{% endif %}"></i>
+        <span class="like-count">{{ post.total_likes }}</span>
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    </button>
+{% endif %}
+    {% if post.author == user %}
+        <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
+    {% endif %}
+{% if user.is_authenticated %}
+    
+{% endif %}
+
+<h3>Comments</h3>
+<ul>
+    {% for comment in comments %}
+        <div class="comment" id="comment-{{ comment.id }}">
+            <li><p><strong>{{ comment.author.username }}</strong>:</p> <p class="comment-content">{{ comment.content }}<p></li>
+            {% if comment.author == user %}
+                <!-- Edit Button -->
+                <button
+                    class="btn btn-sm btn-secondary edit-btn"
+                    data-comment-id="{{ comment.id }}"
+                    data-post-id="{{ post.id }}"
+                >
+                    Edit
+                </button>
+
+                <!-- Edit Form (Hidden by Default) -->
+                <form class="edit-form" data-comment-id="{{ comment.id }}" style="display: none;">
+                    <textarea class="form-control edit-content">{{ comment.content }}</textarea>
+                    <button
+                        type="button"
+                        class="btn btn-primary save-btn"
+                        data-comment-id="{{ comment.id }}"
+                        data-post-id="{{ post.id }}"
+                    >
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-secondary cancel-btn">Cancel</button>
+                </form>
+                
+                                <!-- Delete Button -->
+                <button>
+                    <a 
+                       href="{% url 'delete-comment' post_pk=post.pk comment_pk=comment.pk %}" 
+                       class="btn btn-danger"
+                    >
+                        Delete
+                    </a>
+                </button>
+            {% endif %}
+            
+            {% if user.is_authenticated %}
+                <button class="like-btn-c" data-comment-id="{{ comment.id }}" data-url="{% url 'like-comment' post.id comment.id %}">
+                    <i class="fa fa-heart{% if request.user in comment.liked_by.all %} liked{% endif %}"></i>
+                    <span class="like-count">{{ comment.liked_by.count }}</span>
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                </button>
+                
+            {% endif %}
+        </div>
+        
+    {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+    
+</ul>
+
+{% if user.is_authenticated %}
+    <form method="post" action="{% url 'add-comment' post.id %}">
+        {% csrf_token %}
+        <textarea name="content" rows="4" required></textarea>
+        <button type="submit">Add Comment</button>
+    </form>
+{% endif %}
+    <script src="{% static 'js/comment-edit.js' %}"></script>
+{% endblock %}

@@ -8,7 +8,7 @@
 /* Basic body styling */
 body {
     font-family: Arial, sans-serif;
-    background-image: url('https://img.freepik.com/free-vector/vector-abstract-musical-background-vector-illustration_206725-619.jpg?t=st=1732913303~exp=1732916903~hmac=fbd092646316a87ba1552c00857d58c0f6cd5ddd47e3ec960055b3ced059ef87&amp');  /* Set the image URL */
+    background-image: url('https://img.freepik.com/free-vector/gradient-music-notes-background_23-2151320196.jpg?t=st=1733069154~exp=1733072754~hmac=49cf6b96d22edec734fdcbe4af16f6f96dc830780a2036077aed16d0edbf81b6&w=996');  /* Set the image URL */
     background-size: cover;  /* Ensure the image covers the whole page */
     background-position: center center;  /* Center the image */
     background-attachment: fixed;  /* Keep the background fixed when scrolling */
@@ -46,7 +46,7 @@ p {
 }
 
 .logo-img img {
-    width: 1rem;
+    width: 3rem;
     height: auto;
     margin-left: 5em;
 }
@@ -176,7 +176,7 @@ p {
     color: #e63946;
 }
 
-.like-btn {
+.like-btn.like-btn-c {
     background: none;
     border: none;
     cursor: pointer;

@@ -23,4 +23,8 @@ class Comment(models.Model):
     author = models.ForeignKey(to=ModelUser, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField(verbose_name="Comment Content")
     created_at = models.DateTimeField(auto_now_add=True)
+    liked_by = models.ManyToManyField(to=ModelUser, related_name='liked_comments', blank=True)
 
+    @property
+    def total_comment_likes(self):
+        return self.liked_by.count()

@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from NoteAlongProject.accounts.views import IndexView, SignupView, custom_logout, CustomLoginView, ProfileDetailView, \
-    ProfileEditView, OtherUserProfileView
+    ProfileEditView, OtherUserProfileView, UserDeleteView, UserOwnPostsView, OtherUserProfilePostsView
 
 urlpatterns = [
     #    path('admin/', admin.site.urls),
@@ -13,7 +13,13 @@ urlpatterns = [
          include([
              path('', ProfileDetailView.as_view(), name='profile-details'),
              path('edit/', ProfileEditView.as_view(), name='profile-edit'),
-             path('<str:username>/', OtherUserProfileView.as_view(), name='profile-other'),
+             path('delete/', UserDeleteView.as_view(), name='profile-delete'),
+             path('posts/', UserOwnPostsView.as_view(), name='profile-posts'),
+             path('<str:username>/', include([
+                path('', OtherUserProfileView.as_view(), name='profile-other'),
+                path('posts/', OtherUserProfilePostsView.as_view(), name='profile-posts-other')]),
+                  )
+
          ])),
 
 ]

@@ -20,6 +20,15 @@
         </div>
         {% if user.is_authenticated %}
             <nav class="nav-links">
+                {% if user.profile.profile_pic %}
+                    <a>
+                        <img src="{{ user.profile.profile_pic }}" alt="Profile Picture" width="70" height="auto">
+                    </a>
+                {% else %}
+                    <a>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="Profile Picture" width="70" height="auto">
+                    </a>
+                {% endif %}
                 <a href="{% url 'profile-details' %}">Profile</a>
                 <a href="#">Music</a>
                 <a href="#">Festivals</a>

@@ -24,7 +24,10 @@
         <div><strong>Music Genres:</strong> 
             {% for genre in profile.music_genre_preferences.all %}
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                N/A
             {% endfor %}
         </div>
+        <a href="{% url 'profile-posts-other' username=username %}">Posts</a>
     </div>
 {% endblock %}
