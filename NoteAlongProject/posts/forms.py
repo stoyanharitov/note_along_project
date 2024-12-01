@@ -11,3 +11,11 @@ class CreatePostForm(forms.ModelForm):
         widgets = {
             'genres': forms.CheckboxSelectMultiple(),
         }
+
+class PostEditForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'content', 'genres')
+        widgets = {
+            'genres': forms.CheckboxSelectMultiple(),
+        }

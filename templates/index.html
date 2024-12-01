@@ -7,7 +7,7 @@
     {% elif first_name %}
         <h1>Hello {{ first_name }}</h1>
     {% else %}
-        <h1>Hello {{ profile.user.username }}</h1>
+        <h1>Hello {{ username }}</h1>
     {% endif %}
     
     <a href="{% url 'post-create' %}">Create a post</a>
@@ -19,11 +19,20 @@
             <li>
                 <h3>{{ post.title }}</h3>
                 <p>{{ post.content }}</p>
-                <p><strong>Genres:</strong> 
+                <p>Author: {{ post.author.username}}</p>  {#  add author anchor with link to user profile  #}
+                <p><strong>Genres:</strong>
                     {% for genre in post.genres.all %}
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </p>
+                    <button class="like-btn" data-post-id="{{ post.id }}" data-url="{% url 'like-post' %}">
+                        <i class="fa fa-heart{% if request.user in post.likes.all %} liked{% endif %}"></i>
+                        <span class="like-count">{{ post.total_likes }}</span>
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    </button>
+                {% if post.author == user %}
+                    <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
+                {% endif %}
             </li>
         {% endfor %}
         </ul>

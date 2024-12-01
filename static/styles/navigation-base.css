@@ -164,3 +164,20 @@ p {
     text-decoration: none;
     transition: color 0.2s ease;
 }
+
+/* Styling for like icon */
+.fa-heart {
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.fa-heart.liked {
+    color: #e63946;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}

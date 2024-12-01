@@ -11,7 +11,7 @@ class SignupForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
-class ProfileForm(forms.ModelForm):
+class ProfileEditForm(forms.ModelForm):
     # first I add fields for the first and last name
     first_name = forms.CharField(max_length=30, required=False)
     last_name = forms.CharField(max_length=30, required=False)
@@ -39,4 +39,7 @@ class ProfileForm(forms.ModelForm):
         user.save()
         if commit:
             profile.save()
+            self.save_m2m()
         return profile
+
+
