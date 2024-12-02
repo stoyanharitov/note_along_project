@@ -2,7 +2,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView, ListView, TemplateView, DeleteView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from django.contrib.auth.models import User
 from .forms import SignupForm, ProfileEditForm
 from NoteAlongProject.accounts.models import Profile
 from django.contrib.auth.views import LoginView
@@ -11,7 +10,8 @@ from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator, PageNotAnInteger
+from django.http import HttpResponseRedirect
 
 from ..posts.models import Post
 
@@ -38,6 +38,31 @@ class  IndexView(ListView):
             context['last_name'] = self.request.user.last_name
             context['username'] = self.request.user.username
         return context
+
+    def get(self, request, *args, **kwargs):
+        # Get the page number from query parameters
+        page_number = request.GET.get('page', 1)
+
+        # Fetch the queryset
+        queryset = self.get_queryset()
+
+        # Initialize the paginator
+        paginator = Paginator(queryset, self.paginate_by)
+
+        try:
+            # Validate the page number
+            page_number = int(page_number)
+            if page_number < 1:
+                raise ValueError("Page number less than 1")
+            elif page_number > paginator.num_pages:
+                # Redirect to the last page if the number is too high
+                return HttpResponseRedirect(f'?page={paginator.num_pages}')
+        except (ValueError, PageNotAnInteger):
+            # Redirect to the first page if the number is invalid
+            return HttpResponseRedirect('?page=1')
+
+        # Call the parent class's get method to continue
+        return super().get(request, *args, **kwargs)
 
 
 class SignupView(CreateView):
@@ -113,7 +138,7 @@ class OtherUserProfileView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class UserDeleteView(LoginRequiredMixin, DeleteView):
+class UserDeleteView(LoginRequiredMixin,  DeleteView):
     model = ModelUser
     template_name = 'account/profile-delete.html'
     success_url = reverse_lazy('index')
@@ -131,7 +156,7 @@ class UserOwnPostsView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'common/profile-posts.html'
     context_object_name = 'posts'
-    paginate_by = 5
+    paginate_by = 2
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -146,13 +171,32 @@ class UserOwnPostsView(LoginRequiredMixin, ListView):
             context['first_name'] = self.request.user.first_name
             context['last_name'] = self.request.user.last_name
             context['username'] = self.request.user.username
-
-        page_number = self.request.GET.get('page')
-        if page_number:
-            total_pages = context['page_obj'].paginator.num_pages
-            if int(page_number) > total_pages:
-                return redirect(f'/profile/posts/?page={total_pages}')
         return context
+
+    def get(self, request, *args, **kwargs):
+        # Get the page number from query parameters
+        page_number = request.GET.get('page', 1)
+
+        # Fetch the queryset
+        queryset = self.get_queryset()
+
+        # Initialize the paginator
+        paginator = Paginator(queryset, self.paginate_by)
+
+        try:
+            # Validate the page number
+            page_number = int(page_number)
+            if page_number < 1:
+                raise ValueError("Page number less than 1")
+            elif page_number > paginator.num_pages:
+                # Redirect to the last page if the number is too high
+                return HttpResponseRedirect(f'?page={paginator.num_pages}')
+        except (ValueError, PageNotAnInteger):
+            # Redirect to the first page if the number is invalid
+            return HttpResponseRedirect('?page=1')
+
+        # Call the parent class's get method to continue
+        return super().get(request, *args, **kwargs)
 
 
 class OtherUserProfilePostsView(LoginRequiredMixin, ListView):
@@ -185,12 +229,31 @@ class OtherUserProfilePostsView(LoginRequiredMixin, ListView):
             context['first_name'] = self.profile.user.first_name
             context['last_name'] = self.profile.user.last_name
             context['profile_username'] = self.profile.user.username
-
-        page_number = self.request.GET.get('page')
-        if page_number:
-            total_pages = context['page_obj'].paginator.num_pages
-            if int(page_number) > total_pages:
-                return redirect(f'/profile/posts/?page={total_pages}')
         return context
+
+    def get(self, request, *args, **kwargs):
+        # Get the page number from query parameters
+        page_number = request.GET.get('page', 1)
+
+        # Fetch the queryset
+        queryset = self.get_queryset()
+
+        # Initialize the paginator
+        paginator = Paginator(queryset, self.paginate_by)
+
+        try:
+            # Validate the page number
+            page_number = int(page_number)
+            if page_number < 1:
+                raise ValueError("Page number less than 1")
+            elif page_number > paginator.num_pages:
+                # Redirect to the last page if the number is too high
+                return HttpResponseRedirect(f'?page={paginator.num_pages}')
+        except (ValueError, PageNotAnInteger):
+            # Redirect to the first page if the number is invalid
+            return HttpResponseRedirect('?page=1')
+
+        # Call the parent class's get method to continue
+        return super().get(request, *args, **kwargs)
 
 
