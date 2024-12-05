@@ -26,7 +26,7 @@ class  IndexView(ListView):
     def get_queryset(self):
         if self.request.user.is_authenticated:
             user_genres = self.request.user.profile.music_genre_preferences.all()
-            return Post.objects.filter(genres__in=user_genres).distinct()
+            return Post.objects.filter(genres__in=user_genres).distinct().order_by('-created_at')
         else:
             return Post.objects.none()
 
@@ -79,6 +79,12 @@ class SignupView(CreateView):
 
 class CustomLoginView(LoginView):
     template_name = 'account/login.html'
+
+    def form_valid(self, form):
+        user = form.get_user()
+        if not hasattr(user, 'profile'):
+            Profile.objects.get_or_create(user=user)
+        return super().form_valid(form)
 
 
 @login_required
@@ -160,7 +166,7 @@ class UserOwnPostsView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return Post.objects.filter(author__exact=self.request.user)
+            return Post.objects.filter(author__exact=self.request.user).order_by('-created_at')
         else:
             return Post.objects.none()
 
@@ -220,7 +226,7 @@ class OtherUserProfilePostsView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Post.objects.filter(author=self.profile.user)
+        return Post.objects.filter(author=self.profile.user).order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -232,28 +238,22 @@ class OtherUserProfilePostsView(LoginRequiredMixin, ListView):
         return context
 
     def get(self, request, *args, **kwargs):
-        # Get the page number from query parameters
+
         page_number = request.GET.get('page', 1)
 
-        # Fetch the queryset
         queryset = self.get_queryset()
-
-        # Initialize the paginator
         paginator = Paginator(queryset, self.paginate_by)
 
         try:
-            # Validate the page number
+
             page_number = int(page_number)
             if page_number < 1:
                 raise ValueError("Page number less than 1")
             elif page_number > paginator.num_pages:
-                # Redirect to the last page if the number is too high
                 return HttpResponseRedirect(f'?page={paginator.num_pages}')
         except (ValueError, PageNotAnInteger):
-            # Redirect to the first page if the number is invalid
             return HttpResponseRedirect('?page=1')
 
-        # Call the parent class's get method to continue
         return super().get(request, *args, **kwargs)
 
 

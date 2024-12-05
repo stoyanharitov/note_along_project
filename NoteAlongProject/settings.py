@@ -33,10 +33,12 @@ ALLOWED_HOSTS = []
 
 # Application definition
 CUSTOM_APPS =['NoteAlongProject.accounts',
-              'NoteAlongProject.posts'
+              'NoteAlongProject.posts',
+              'NoteAlongProject.events'
               ]
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

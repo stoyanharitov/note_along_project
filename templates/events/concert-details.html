@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+  <h1>{{ concert.musician }}'s {{ concert.title }}</h1>
+  <p><strong>Date:</strong> {{ concert.date }}</p>
+  <p><strong>Location:</strong> {{ concert.location }}</p>
+  <p><strong>Genres:</strong> 
+    {% if concert.genres.all %}
+      {{ concert.genres.all|join:", " }}
+    {% else %}
+      No genres specified.
+    {% endif %}
+  </p>
+  {% if user.profile.is_musician and concert.musician == user %}
+    <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit Concert</a>
+  {% endif %}
+    <p>Concertgoers: {{ concert.concertgoers.count }}</p>
+    
+  {% if user.is_authenticated and not user.profile.is_musician %}
+    <button id="toggle-attendance-btn" data-concert-url="{% url 'concert-toggle-attendance' concert.id %}">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      Join the concert
+    </button>
+  {% endif %}
+    <script src="{% static 'js/js-attend-concert-func.js' %}"></script>
+{% endblock %}
