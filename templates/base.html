@@ -19,6 +19,19 @@
             </a>
         </div>
         {% if user.is_authenticated %}
+            <div class="top-banner">
+                <form class="search-form" method="get" action="{% url 'general-search' %}">
+                    <input type="text" name="query" placeholder="Search..." value="{{ request.GET.query }}">
+                    <select name="category">
+                        <option value="users" {% if request.GET.category == 'users' %}selected{% endif %}>Users</option>
+                        <option value="posts" {% if request.GET.category == 'posts' %}selected{% endif %}>Posts</option>
+                        <option value="concerts" {% if request.GET.category == 'concerts' %}selected{% endif %}>Concerts</option>
+                        <option value="festivals" {% if request.GET.category == 'festivals' %}selected{% endif %}>Festivals</option>
+                        <option value="musicians" {% if request.GET.category == 'musicians' %}selected{% endif %}>Musicians</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
             <nav class="nav-links">
                 {% if user.profile.profile_pic %}
                     <a>
@@ -30,16 +43,16 @@
                     </a>
                 {% endif %}
                 <a href="{% url 'profile-details' %}">Profile</a>
-                <a href="#">Music</a>
-                <a href="#">Festivals</a>
-                <a href="#">About</a>
+                <a href="{% url 'concert-dashboard' %}">Concerts</a>
+                <a href="{% url 'festival-dashboard' %}">Festivals</a>
+                <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'logout' %}">Logout</a>
             </nav>
         {% else %}
             <nav class="nav-links">
                 <a href="{% url 'signup' %}">Signup</a>
                 <a href="{% url 'login' %}">Login</a>
-                <a href="#">About</a>
+                <a href="{% url 'about' %}">About</a>
             </nav>
         {% endif %}
     </header>

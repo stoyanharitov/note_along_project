@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Explore festivals</h1>
+    {% if profile.music_genre_preferences %}
+        <p>Your favorite genres:
+            <span>{{ profile.music_genre_preferences.all|join:", " }} </span>
+        </p>
+    {% else %}
+        <p>You haven't selected any genres yet.</p>
+    {% endif %}
+    
+{% if festivals %}
+    <ul>
+        {% for festival in festivals %}
+            <li>
+                <a href="{% url 'index' %}">{{ festival.title }}</a>
+                <p>End Date: {{ festival.end_date }}</p>
+                <p>Genres: <span>{{ festival.genres.all|join:", " }}</span></p>
+                {% if festival.concerts %}
+                    <p>Concerts: {{ festival.concerts.all|join:', ' }}</p>
+                {% else %}
+                    <p>No concerts yet</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No festivals found matching your preferences.</p>
+{% endif %}
+{% endblock %}

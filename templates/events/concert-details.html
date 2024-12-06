@@ -14,14 +14,53 @@
   </p>
   {% if user.profile.is_musician and concert.musician == user %}
     <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit Concert</a>
+    <a href="{% url 'concert-delete' concert.id %}" class="btn btn-danger">Delete</a>
   {% endif %}
-    <p>Concertgoers: {{ concert.concertgoers.count }}</p>
+    <p id="concertgoers-count">Concertgoers: {{ concert.concertgoers.count }}</p>
     
   {% if user.is_authenticated and not user.profile.is_musician %}
-    <button id="toggle-attendance-btn" data-concert-url="{% url 'concert-toggle-attendance' concert.id %}">
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-      Join the concert
+    <button class="toggle-attendance-btn"
+            concert-id="{{ concert.id }}"
+            data-concert-url="{% url 'concert-toggle-attendance' concert.pk %}">
+        {% if user in concert.concertgoers.all %}
+            Going!
+        {% else %}
+            Join the concert
+        {% endif %}
     </button>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
   {% endif %}
+    {% if concert.concertgoers.count == 0 %}
+        <p>No other concertgoers yet</p>
+    {% elif concert.concertgoers.all.count == 1 and concert.concertgoers.first == request.user %}
+        <p>No other concertgoers yet</p>
+    {% else %}
+        <button id="show-concertgoers-btn">
+            Who else is going?
+        </button>
+    {% endif %}
+
+<ul id="concertgoers-list" style="display: none;"></ul>
+    
+{% if concert.concertgoers %}
+    <script id="concertgoers-data" type="application/json">
+        [
+            {% for user in concert.concertgoers.all %}
+                {% if user != request.user %}
+                    {
+                        "username": "{{ user.username }}",
+                        "profile_url": "/profile/{{ user.username }}"
+                    }
+                    {% if not forloop.last and not user == concert.concertgoers.all.last %}
+                        ,
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        ]
+    </script>
+{% endif %}
+
+
     <script src="{% static 'js/js-attend-concert-func.js' %}"></script>
+    <script src="{% static 'js/concertgoers-list-func.js' %}"></script>
 {% endblock %}

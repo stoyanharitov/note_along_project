@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Festivals You're Attending</h1>
+
+{% if festivals %}
+    <ul>
+        {% for festival in festivals %}
+            <li>
+                <a href="{% url 'index' %}">{{ festival.title }}</a>
+                <p>Dates: {{ festival.start_date }} - {{ festival.end_date }}</p>
+                <p>Concerts in this festival:</p>
+                <ul>
+                    {% for concert in festival.concerts.all %}
+                        {% if request.user in concert.concertgoers.all %}
+                            <li>
+                                <a href="{% url 'concert-detail' concert.pk %}">{{ concert.title }}</a> 
+                                on {{ concert.date }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You are not attending any festivals yet.</p>
+{% endif %}
+{% endblock %}

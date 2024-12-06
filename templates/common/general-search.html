@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load get_model_name %}
+
+<h2>Search Results</h2>
+
+{% if results %}
+    <ul>
+        {% for result in results %}
+            <li>
+                {% if result|to_class_name == 'User' %}
+                    <p><a href="{% url 'profile-other' result.username %}">{{ result.username }}</a></p>
+                    <p>Location: {% if not result.profile.city %} N/A {% else %} {{ result.profile.city }} {% endif %}</p>
+                    <p>Age: {% if not result.profile.age %} N/A {% else %} {{ result.profile.age }} {% endif %}</p>
+                    <p><strong>Genres:</strong>
+                         {% for genre in result.profile.music_genre_preferences.all %}
+                        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+                             {% empty %}
+                             <span> N/A </span>
+                    {% endfor %}
+                    </p>
+                    
+                {% elif result|to_class_name == 'Post' %}
+                    <p><a href="{% url 'post-details' result.pk %}">{{ result.title }}</a></p>
+                    <p><a href="{% url 'profile-other' result.author.username %}">{{ result.author.username }}</a></p>
+                    <p><strong>Genres:</strong>
+                    {% for genre in result.genres.all %}
+                        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        <span> N/A </span>
+                    {% endfor %}
+                    </p>
+                {% elif result|to_class_name == 'Concert' %}
+                    <p><a href="{% url 'concert-details' result.pk %}">{{ result.title }}</a> 
+                        by 
+                        <a href="{% url 'profile-other' result.musician.username %}">{{ result.musician.username }}</a></p>
+                    <p>Location: {{ result.location }}</p>
+                    <p>Date: {{ result.date|date:"F j, Y, g:i a" }}</p>
+                    <p><strong>Genres:</strong>
+                    {% for genre in result.genres.all %}
+                        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        <span> N/A </span>
+                    {% endfor %}
+                    </p>
+                {% elif result|to_class_name == 'Festival' %}
+                     <h2>{{ result.title }}</h2>
+                    <p>Location: {{ result.location }}</p>
+                    <p>Start date: {{ result.start_date }} - End date: {{ result.end_date }}</p>
+                    <p><strong>Genres:</strong>
+                    {% for genre in result.genres.all %}
+                        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        <span> N/A </span>
+                    {% endfor %}
+                    </p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found for "{{ query }}" in the selected category.</p>
+{% endif %}
+
+{% endblock %}

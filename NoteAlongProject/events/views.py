@@ -1,13 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
-from django.core.paginator import Paginator, PageNotAnInteger
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView, ListView, UpdateView, DetailView, DeleteView
 
-from NoteAlongProject.events.forms import ConcertForm
-from NoteAlongProject.events.models import Concert
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.utils.timezone import now
+
+from NoteAlongProject.accounts.models import Profile
+from NoteAlongProject.events.forms import ConcertForm, ConcertDeleteForm
+from NoteAlongProject.events.models import Concert, Festival
 
 
 class ConcertCreateView(LoginRequiredMixin, CreateView):
@@ -28,7 +30,7 @@ class ConcertCreateView(LoginRequiredMixin, CreateView):
 
 class ConcertListView(LoginRequiredMixin, ListView):
     model = Concert
-    template_name = 'events/profile-concerts.html'
+    template_name = 'common/profile-concerts.html'
     context_object_name = 'concerts'
 
     def get_queryset(self):
@@ -75,30 +77,98 @@ class ConcertDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'concert'
 
 
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from .models import Concert
-
 @login_required
 def concert_toggle_attendance(request, pk):
-    if not request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error': 'Invalid request'}, status=400)
+    if request.method == "POST":
+        user = request.user
+        concert = get_object_or_404(Concert, id=pk)
 
-    concert = get_object_or_404(Concert, pk=pk)
+        if user == concert.musician:
+            return JsonResponse({"error": "Creators cannot join their own concert."}, status=403)
 
-    # Toggle the user's attendance status
-    if request.user in concert.concertgoers.all():
-        concert.concertgoers.remove(request.user)
-        attending = False
-    else:
-        concert.concertgoers.add(request.user)
-        attending = True
+        if user in concert.concertgoers.all():
+            concert.concertgoers.remove(user)
+            return JsonResponse({"attending": False})
+        else:
+            concert.concertgoers.add(user)
+            return JsonResponse({"attending": True})
 
-    # Return a JSON response indicating the updated attendance status
-    return JsonResponse({
-        'attending': attending,
-        'user': {
-            'username': request.user.username,
-            'id': request.user.id,  # Include user ID to locate the list item
-        }
-    })
+    return JsonResponse({"error": "Invalid request method."}, status=400)
+
+
+class ConcertDeleteView(LoginRequiredMixin, DeleteView):
+    model = Concert
+    form_class = ConcertDeleteForm
+    success_url = reverse_lazy('concert-list')
+    template_name = 'events/concert-delete.html'
+
+    def get_initial(self):
+        return self.object.__dict__
+
+    def form_invalid(self, form):
+        return self.form_valid(form)
+
+
+class ConcertsDashboardView(LoginRequiredMixin, ListView):
+    model = Concert
+    template_name = 'events/concert-dashboard.html'
+    context_object_name = 'concerts'
+
+    def get_queryset(self):
+        profile = get_object_or_404(Profile, user=self.request.user)
+        user_genres = profile.music_genre_preferences.all()
+
+        return Concert.objects.filter(genres__in=user_genres,
+            date__gte=now()).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = get_object_or_404(Profile, user=self.request.user)
+
+        context['profile'] = profile
+        return context
+
+class FestivalDashboardView(LoginRequiredMixin, ListView):
+    model = Festival
+    template_name = "events/festival-dashboard.html"
+    context_object_name = "festivals"
+
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'profile') and user.profile.music_genre_preferences.exists():
+            genres = user.profile.music_genre_preferences.all()
+        else:
+            genres = None
+
+
+        queryset = Festival.objects.filter(
+            end_date__gte=now()
+        ).order_by("end_date")
+
+        if genres:
+            queryset = queryset.filter(genres__in=genres).distinct()
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = get_object_or_404(Profile, user=self.request.user)
+
+        context['profile'] = profile
+        return context
+
+
+class FestivalListView(LoginRequiredMixin, ListView):
+    model = Festival
+    template_name = "common/profile-festivals.html"
+    context_object_name = "festivals"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # Retrieve festivals that include concerts the user is a concertgoer of
+        queryset = Festival.objects.filter(
+            concerts__concertgoers=user
+        ).distinct()  # Avoid duplicates if a festival has multiple matching concerts
+
+        return queryset

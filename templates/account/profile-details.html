@@ -8,6 +8,9 @@
     {% else %}
         <h1>{{ profile.user.username }}'s Profile</h1>
     {% endif %}
+    {% if profile.is_musician %}
+    <span> Musician </span>
+    {% endif %}
     
     {% if profile.profile_pic %}
         <img src="{{ profile.profile_pic }}" alt="Profile Picture" width="150" height="150">
@@ -24,13 +27,14 @@
         <p><strong>Age:</strong> {{ profile.age }}</p>
         <p><strong>City:</strong> {{ profile.city }}</p>
         <div><strong>Music Genres:</strong> 
-            {% for genre in profile.music_genre_preferences.all %}
+            <span>{% for genre in profile.music_genre_preferences.all %}
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
+            {% endfor %}</span>
         </div>
-        <a href="{% url 'profile-posts' %}">My posts</a>
-        <a href="{% url 'concert-list' %}">My concerts</a>
-        <a href="{% url 'profile-edit' %}">Edit Profile</a>
-        <a href="{% url 'profile-delete' %}" class="btn btn-danger">Delete Profile</a>
+        <p><a href="{% url 'profile-posts' %}">My posts</a></p>
+        <p><a href="{% url 'concert-list' %}">My concerts</a></p>
+        <p><a href="{% url 'festival-list' %}">My festivals</a></p>
+        <p><a href="{% url 'profile-edit' %}">Edit Profile</a></p>
+        <p><a href="{% url 'profile-delete' %}" class="btn btn-danger">Delete Profile</a></p>
     </div>
 {% endblock %}

@@ -56,7 +56,7 @@
                 
        
     {% else %}
-        <h1>Seems like you have not created any posts yet. You can create your first post now! </h1>
+    <h1>Seems like you have not created any posts yet. You can <a href="{% url 'post-create' %}">create your first post</a> now! </h1>
     {% endif %}
 
 {% endblock %}

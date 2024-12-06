@@ -1,42 +1,48 @@
-document.getElementById('toggle-attendance-btn')?.addEventListener('click', function() {
-      const concertId = this.getAttribute('data-concert-id');
-      const button = this;
-      const concertUrl = this.getAttribute('data-concert-url');
+const button = document.querySelector('.toggle-attendance-btn');
 
-      // Send AJAX request to toggle attendance
-        fetch(concertUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // CSRF Token
-          },
-          body: JSON.stringify({ concert_id: concertId }),
-        })
-        .then(response => response.json())
-        .then(data => {
-                // Update the button text based on the user's attendance status
-        if (data.attending) {
-          button.textContent = "Going!";
+if (button) {
+    button.addEventListener('click', () => {
+        const concertId = button.getAttribute('concert-id');
+        const url = button.getAttribute('data-concert-url');
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-          // Create a new list item and add it to the concertgoers list
-          const newUserLi = document.createElement('li');
-          const userLink = document.createElement('a');
-          userLink.href = `/profile/${data.user.username}`;
-          userLink.textContent = data.user.username;
-          newUserLi.appendChild(userLink);
-
-          document.getElementById('concertgoers-list').appendChild(newUserLi);
-        } else {
-          button.textContent = "Join the concert";
-
-          // Find the user's list item and remove it
-          const userLi = document.getElementById(`concertgoer-${data.user.id}`);
-          if (userLi) {
-            userLi.remove();
-          }
+        if (!csrfToken) {
+            console.error("CSRF token not found");
+            return;
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ concert_id: concertId }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Change button text based on attendance
+            if (data.attending) {
+                button.textContent = "Going!";
+            } else {
+                button.textContent = "Join the concert";
+            }
+
+            // Update the concertgoers count
+            const concertgoersCountElement = document.getElementById('concertgoers-count');
+            if (concertgoersCountElement) {
+                const currentCount = parseInt(concertgoersCountElement.textContent.replace('Concertgoers: ', ''));
+                concertgoersCountElement.textContent = `Concertgoers: ${currentCount + (data.attending ? 1 : -1)}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     });
+}
+

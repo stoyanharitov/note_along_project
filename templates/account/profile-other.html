@@ -8,6 +8,9 @@
     {% else %}
         <h1>{{ profile.user.username }}'s Profile</h1>
     {% endif %}
+    {% if profile.is_musician %}
+        <span>Musician</span>
+    {% endif %}
     
     {% if profile.profile_pic %}
         <img src="{{ profile.profile_pic }}" alt="Profile Picture" width="150" height="150">
@@ -19,15 +22,23 @@
         {% elif profile.user.first_name and profile.user.last_name %}
             <p><strong>Username:</strong> {{ profile.user.username }}</p>
         {% endif %}
-        <p><strong>Age:</strong> {{ profile.age }}</p>
-        <p><strong>City:</strong> {{ profile.city }}</p>
+        <p>
+            <strong>Age:</strong>
+                {% if profile.age %}{{ profile.age }}{% else %}N/A{% endif %}
+        <p>
+            <strong>City:</strong>
+                {% if profile.city %}{{ profile.city }}{% else %}N/A{% endif %}
+        </p>
         <div><strong>Music Genres:</strong> 
             {% for genre in profile.music_genre_preferences.all %}
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
-                {% empty %}
+            {% empty %}
                 N/A
             {% endfor %}
         </div>
         <a href="{% url 'profile-posts-other' username=username %}">Posts</a>
+        <a href="{% url 'profile-concerts-other' username=username %}">Concerts</a>
+        <a href="{% url 'profile-festivals-other' username=username %}">Festivals</a>
+        
     </div>
 {% endblock %}

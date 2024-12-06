@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Explore concerts</h1>
+
+{% if profile.music_genre_preferences.exists %}
+    <p>Your favorite genres:
+        <span>{{ profile.music_genre_preferences.all|join:", " }} </span>
+    </p>
+{% else %}
+    <p>You haven't selected any genres yet.</p>
+{% endif %}
+
+<h2>Concert Recommendations</h2>
+<ul>
+    {% for concert in concerts %}
+        <li>
+            <a href="{% url 'concert-details' concert.pk %}">{{ concert.title }}</a> 
+            by <a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician.username }}</a><br>
+            Date: {{ concert.date|date:"F j, Y, g:i a" }}<br>
+            Location: {{ concert.location }}<br>
+            Genres: 
+            {% for genre in concert.genres.all %}
+                {{ genre.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+                <p>Concertgoers: {{ concert.concertgoers.count }}</p>
+            {% if user != concert.musician and user in concert.concertgoers.all %}
+                <p>You are going!</p>
+            {% endif %}
+        </li>
+    {% empty %}
+        <p>No concerts match your preferences at the moment.</p>
+    {% endfor %}
+</ul>
+
+{% endblock %}

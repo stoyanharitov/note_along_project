@@ -75,12 +75,10 @@ class PostEditView(LoginRequiredMixin, UpdateView):
     #     return reverse_lazy('post-details', kwargs={'post_pk': post_pk})
 
     def get_success_url(self):
-        # Try to fetch the referring URL
         previous_url = self.request.META.get('HTTP_REFERER')
 
-        # Check if the referrer is the same as the current URL
         if previous_url and previous_url != self.request.build_absolute_uri():
-            return previous_url  # Redirect to the previous page
+            return previous_url
         else:
             post_pk = self.kwargs['post_pk']
             return reverse_lazy('post-details', kwargs={'post_pk': post_pk})

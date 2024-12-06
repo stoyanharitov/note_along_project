@@ -35,7 +35,13 @@ p {
     align-items: center;
     z-index: 1000;  /* Ensure navbar stays on top */
     margin-bottom: 2px;
+    height: 100px;  /* Example height */
 }
+
+div.content {
+    margin-top: 100px;  /* This will be equal to the height of the navbar */
+}
+
 
 /* Styling for logo */
 .logo a {
@@ -182,4 +188,40 @@ p {
     cursor: pointer;
 }
 
+
+
+/*FORM for SEARCH */
+/* Dark theme for the search form */
+.search-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #444;  /* Slightly lighter dark background for the form */
+    border-radius: 25px;
+    padding: 5px;
+    width: 300px;  /* Adjust the width to make it narrow */
+}
+
+.search-form input[type="text"] {
+    width: 80%;  /* Makes the input take most of the space */
+    padding: 5px;
+    border: none;
+    border-radius: 15px;
+    background-color: #555; /* Dark background for input */
+    color: #fff;  /* Light text color */
+}
+
+.search-form button {
+    background-color: #555; /* Dark button background */
+    color: #fff;  /* Light text for button */
+    border: none;
+    padding: 8px 15px;
+    margin-left: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #666; /* Lighter shade on hover */
+}
 

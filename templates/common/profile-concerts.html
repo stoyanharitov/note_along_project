@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>My Concerts</h1>
+  <h1>Concerts you are attending</h1>
     {% if user.profile.is_musician %}
     <a href="{% url 'concert-create' %}" class="btn btn-primary">Create a New Concert</a>
     {% endif %}
   <ul>
     {% for concert in concerts %}
       <li>
-{#        <a href="{% url 'concert_detail' concert.id %}">{{ concert.title }}</a> #}
           <h2>{{ concert.musician }}'s {{ concert.title }}</h2>
         - {{ concert.date }} at {{ concert.location }}
             <strong>Genres:</strong> 
@@ -22,11 +21,12 @@
           <p>Concertgoers: {{ concert.concertgoers.count }}</p>
           <a href="{% url 'concert-details' concert.id %}" class="btn btn-primary">Details</a>
           {% if user.profile.is_musician and concert.musician == user %}
-              <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit Concert</a>
+              <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
+              <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
           {% endif %}
       </li>
         {% empty %}
-        <li><h2>No concert found :(</h2></li>
+        <li><p>Seems like you are not attending any concerts yet</p></li>
     {% endfor %}
   </ul>
 {% endblock %}

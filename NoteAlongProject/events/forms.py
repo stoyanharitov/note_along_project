@@ -1,5 +1,7 @@
 from django import forms
 from .models import Concert
+from ..mixins import ReadOnlyMixin
+
 
 class ConcertForm(forms.ModelForm):
     class Meta:
@@ -9,3 +11,12 @@ class ConcertForm(forms.ModelForm):
             'date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'genres': forms.CheckboxSelectMultiple(),
         }
+
+
+
+class ConcertDeleteForm(ReadOnlyMixin, forms.ModelForm):
+    read_only_fields = [ 'title', 'image_url', 'content']
+
+    class Meta:
+        model = Concert
+        exclude = ('musician',)

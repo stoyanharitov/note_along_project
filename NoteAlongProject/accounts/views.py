@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView, UpdateView, ListView, TemplateView, DeleteView
+from django.views.generic import DetailView, UpdateView, ListView, TemplateView, DeleteView, CreateView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
 from .forms import SignupForm, ProfileEditForm
 from NoteAlongProject.accounts.models import Profile
 from django.contrib.auth.views import LoginView
@@ -12,10 +11,12 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger
 from django.http import HttpResponseRedirect
+from django.utils.timezone import now
 
-from ..posts.models import Post
+from NoteAlongProject.events.models import Concert, Festival
+from NoteAlongProject.posts.models import Post
 
-ModelUser = get_user_model()
+UserModel = get_user_model()
 
 class  IndexView(ListView):
     model = Post
@@ -53,7 +54,7 @@ class  IndexView(ListView):
             # Validate the page number
             page_number = int(page_number)
             if page_number < 1:
-                raise ValueError("Page number less than 1")
+                raise ValueError('Page number less than 1')
             elif page_number > paginator.num_pages:
                 # Redirect to the last page if the number is too high
                 return HttpResponseRedirect(f'?page={paginator.num_pages}')
@@ -66,7 +67,7 @@ class  IndexView(ListView):
 
 
 class SignupView(CreateView):
-    model = ModelUser
+    model = UserModel
     form_class = SignupForm
     template_name = 'account/signup.html'
     success_url = reverse_lazy('login')
@@ -125,12 +126,10 @@ class OtherUserProfileView(LoginRequiredMixin, TemplateView):
     def dispatch(self, request, *args, **kwargs):
         username = self.kwargs.get('username')
 
-        # Check if the logged-in user matches the username
         if request.user.is_authenticated and request.user.username == username:
             return self.redirect_to_owner_profile()
 
-        # Get profile details for another user
-        user = get_object_or_404(ModelUser, username=username)
+        user = get_object_or_404(UserModel, username=username)
         self.profile = get_object_or_404(Profile, user=user)
         return super().dispatch(request, *args, **kwargs)
 
@@ -145,7 +144,7 @@ class OtherUserProfileView(LoginRequiredMixin, TemplateView):
 
 
 class UserDeleteView(LoginRequiredMixin,  DeleteView):
-    model = ModelUser
+    model = UserModel
     template_name = 'account/profile-delete.html'
     success_url = reverse_lazy('index')
 
@@ -180,28 +179,21 @@ class UserOwnPostsView(LoginRequiredMixin, ListView):
         return context
 
     def get(self, request, *args, **kwargs):
-        # Get the page number from query parameters
         page_number = request.GET.get('page', 1)
 
-        # Fetch the queryset
         queryset = self.get_queryset()
 
-        # Initialize the paginator
         paginator = Paginator(queryset, self.paginate_by)
 
         try:
-            # Validate the page number
             page_number = int(page_number)
             if page_number < 1:
-                raise ValueError("Page number less than 1")
+                raise ValueError('Page number less than 1')
             elif page_number > paginator.num_pages:
-                # Redirect to the last page if the number is too high
                 return HttpResponseRedirect(f'?page={paginator.num_pages}')
         except (ValueError, PageNotAnInteger):
-            # Redirect to the first page if the number is invalid
             return HttpResponseRedirect('?page=1')
 
-        # Call the parent class's get method to continue
         return super().get(request, *args, **kwargs)
 
 
@@ -216,12 +208,10 @@ class OtherUserProfilePostsView(LoginRequiredMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         username = self.kwargs.get('username')
-        # Check if the logged-in user matches the username
         if request.user.is_authenticated and request.user.username == username:
             return self.redirect_to_owner_profile_posts()
 
-        # Get profile details for another user
-        user = get_object_or_404(ModelUser, username=username)
+        user = get_object_or_404(UserModel, username=username)
         self.profile = get_object_or_404(Profile, user=user)
         return super().dispatch(request, *args, **kwargs)
 
@@ -248,12 +238,62 @@ class OtherUserProfilePostsView(LoginRequiredMixin, ListView):
 
             page_number = int(page_number)
             if page_number < 1:
-                raise ValueError("Page number less than 1")
+                raise ValueError('Page number less than 1')
             elif page_number > paginator.num_pages:
                 return HttpResponseRedirect(f'?page={paginator.num_pages}')
         except (ValueError, PageNotAnInteger):
             return HttpResponseRedirect('?page=1')
 
         return super().get(request, *args, **kwargs)
+
+
+class OtherUserProfileConcertsView(LoginRequiredMixin, ListView):
+    model = Concert
+    template_name = 'common/profile-concerts-other.html'
+    context_object_name = 'concerts'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get the user whose profile we're viewing
+        profile_user = get_object_or_404(UserModel, username=self.kwargs['username'])
+
+        # Concerts where the profile_user is a concertgoer
+        concertgoer_concerts = Concert.objects.filter(concertgoers=profile_user)
+
+        # Concerts created by the profile_user (if they are a musician)
+        created_concerts = Concert.objects.filter(musician=profile_user)
+
+        # Add both to the context
+        context['profile_user'] = profile_user
+        context['concertgoer_concerts'] = concertgoer_concerts
+        context['created_concerts'] = created_concerts
+
+        return context
+
+
+class OtherUserFestivalsView(LoginRequiredMixin, ListView):
+    model = Festival
+    template_name = ('common/profile-festivals-other.html')
+    context_object_name = 'festivals'
+
+    def get_queryset(self):
+        profile_user = self.kwargs.get('username')
+
+        queryset = Festival.objects.filter(
+            concerts__concertgoers__username=profile_user,
+            end_date__gte=now()
+        ).distinct().order_by('end_date')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_user'] = self.get_profile_user()
+        return context
+
+    def get_profile_user(self):
+        username = self.kwargs.get('username')
+        return get_object_or_404(UserModel, username=username)
 
 

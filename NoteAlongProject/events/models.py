@@ -26,6 +26,7 @@ class Festival(models.Model):
     end_date = models.DateTimeField()
     location = models.CharField(max_length=200)
     description = models.TextField()
+    genres = models.ManyToManyField(Genre, blank=True, related_name='festival_genres')
 
 
     def __str__(self):

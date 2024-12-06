@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Festivals Attended by <a href="{% url 'profile-other' username=profile_user.username %}">{{ profile_user.username }}</a></h1>
+
+{% if festivals %}
+    <ul>
+        {% for festival in festivals %}
+            <li>
+                <a href="{% url 'index' %}">{{ festival.title }}</a>
+                <p>Dates: {{ festival.start_date }} - {{ festival.end_date }}</p>
+                <strong>Genres:</strong> 
+                    <span class="genres">
+                    {% if festival.genres.all %}
+                        <span>{{ festival.genres.all|join:", " }}</span>
+                    {% else %}
+                        <span>No genres specified.</span>
+                    {% endif %}
+                    </span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No upcoming festivals for {{ profile_user.username }}.</p>
+{% endif %}
+{% endblock %}
