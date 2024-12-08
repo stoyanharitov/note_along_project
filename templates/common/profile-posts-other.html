@@ -4,7 +4,7 @@
 
 
 {% if posts %}
-        <h1>This is what {{ profile_username }} has posted</h1>
+    <h1>This is what <a href="{% url 'profile-other' profile_username %}">{{ profile_username }}</a> has posted</h1>
         <ul>
         {% for post in posts %}
             <li>
@@ -15,6 +15,13 @@
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </p>
+                {% if post.comments.all %}
+                    {% if post.comments.count == 1 %}
+                        <p>1 Comment</p>
+                    {% else %}
+                        <p>{{ post.comments.count }} Comments</p>
+                    {% endif %}
+                {% endif %}
                     <button class="like-btn" data-post-id="{{ post.id }}" data-url="{% url 'like-post' %}">
                         <i class="fa fa-heart{% if request.user in post.likes.all %} liked{% endif %}"></i>
                         <span class="like-count">{{ post.total_likes }}</span>
@@ -53,7 +60,7 @@
         {% endif %}
     
     {% else %}
-        <h1>Looks like {{ profile_username }} has not posted anything yet :(</h1>
+        <h1>Looks like <a href="{% url 'profile-other' profile_username %}">{{ profile_username }}</a> has not posted anything yet :(</h1>
     {% endif %}
 
 {% endblock %}

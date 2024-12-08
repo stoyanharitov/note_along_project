@@ -2,6 +2,7 @@
 
 {% block content %}
     {% load static %}
+    {% load exclude_user_from_q %}
   <h1>{{ concert.musician }}'s {{ concert.title }}</h1>
   <p><strong>Date:</strong> {{ concert.date }}</p>
   <p><strong>Location:</strong> {{ concert.location }}</p>
@@ -45,13 +46,13 @@
 {% if concert.concertgoers %}
     <script id="concertgoers-data" type="application/json">
         [
-            {% for user in concert.concertgoers.all %}
+            {% for user in concert.concertgoers.all|exclude_user:request.user %}
                 {% if user != request.user %}
                     {
                         "username": "{{ user.username }}",
                         "profile_url": "/profile/{{ user.username }}"
                     }
-                    {% if not forloop.last and not user == concert.concertgoers.all.last %}
+                    {% if not forloop.last and not request.user == concert.concertgoers.all|last %}
                         ,
                     {% endif %}
                 {% endif %}

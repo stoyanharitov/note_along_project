@@ -6,9 +6,12 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 import json
 from django.contrib.auth.decorators import login_required
+from rest_framework import viewsets
 
 from NoteAlongProject.posts.forms import CreatePostForm, PostEditForm
 from NoteAlongProject.posts.models import Post, Comment
+from NoteAlongProject.posts.permissions import IsPostAuthorOrSuperAdmin, IsCommentAuthorOrSuperAdmin
+from NoteAlongProject.posts.serializers import PostSerializer, CommentSerializer
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -61,18 +64,6 @@ class PostEditView(LoginRequiredMixin, UpdateView):
     template_name = "posts/post-edit.html"
     pk_url_kwarg = 'post_pk'
 
-    # def get_success_url(self):
-    #     # Getting the pk I need to redirect
-    #     post_pk = self.kwargs['post_pk']
-    #     return reverse_lazy('post-details', kwargs={'post_pk': post_pk})
-    #
-    # def get_success_url(self):
-    #     previous_url = self.request.META.get('HTTP_REFERER')
-    #     if previous_url:
-    #         return previous_url
-    #     # Getting the pk I need to redirect
-    #     post_pk = self.kwargs['post_pk']
-    #     return reverse_lazy('post-details', kwargs={'post_pk': post_pk})
 
     def get_success_url(self):
         previous_url = self.request.META.get('HTTP_REFERER')
@@ -129,17 +120,13 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 def like_comment(request, post_pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
 
-    # Check if the user has already liked the comment
     if request.user in comment.liked_by.all():
-        # If the user has liked it, remove the like
         comment.liked_by.remove(request.user)
         liked = False
     else:
-        # If the user hasn't liked it, add the like
         comment.liked_by.add(request.user)
         liked = True
 
-    # Return updated likes count in JSON format
     return JsonResponse({'liked': liked, 'total_likes': comment.liked_by.count()})
 
 
@@ -155,3 +142,32 @@ def edit_comment(request, post_pk, comment_pk):
         return JsonResponse({'updated_content': comment.content}, status=200)
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+# REST API view sets
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsPostAuthorOrSuperAdmin]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsCommentAuthorOrSuperAdmin]
+
+    def perform_create(self, serializer):
+        pass
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context

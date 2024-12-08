@@ -1,6 +1,9 @@
 from django import forms
 from .models import Concert
 from ..mixins import ReadOnlyMixin
+from django.contrib.auth import get_user_model
+
+UserModel = get_user_model()
 
 
 class ConcertForm(forms.ModelForm):

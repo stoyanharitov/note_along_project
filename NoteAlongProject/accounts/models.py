@@ -1,9 +1,13 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+
+UserModel = get_user_model()
 
 class Profile(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='profile', primary_key=True)
+    user = models.OneToOneField(to=UserModel, on_delete=models.CASCADE, related_name='profile', primary_key=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     city = models.CharField(max_length=100, blank=True)
     music_genre_preferences = models.ManyToManyField(to='Genre', blank=True)
@@ -11,17 +15,21 @@ class Profile(models.Model):
     is_musician = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        # Automatically add user to groups based on role
-        musician_group, _ = Group.objects.get_or_create(name='Musicians')
-        normal_user_group, _ = Group.objects.get_or_create(name='Normal Users')
+        musician_group, created = Group.objects.get_or_create(name='Musician_admin')
 
+        # Adding groups
         if self.is_musician:
-            self.user.groups.add(musician_group)
-            self.user.groups.remove(normal_user_group)
+            self.user.is_staff = True
+            if musician_group not in self.user.groups.all():
+                self.user.groups.add(musician_group)
         else:
-            self.user.groups.add(normal_user_group)
-            self.user.groups.remove(musician_group)
+            self.user.is_staff = False
+            if musician_group in self.user.groups.all():
+                self.user.groups.remove(musician_group)
+
+        # Save the user and profile
+        self.user.save()
+        super(Profile, self).save(*args, **kwargs)
 
 
 

@@ -2,19 +2,22 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView, ListView, TemplateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from .forms import SignupForm, ProfileEditForm
-from NoteAlongProject.accounts.models import Profile
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.contrib.auth import logout
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.utils.timezone import now
+import threading
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
 
 from NoteAlongProject.events.models import Concert, Festival
+from NoteAlongProject.accounts.models import Profile
 from NoteAlongProject.posts.models import Post
+from NoteAlongProject.accounts.utils import send_password_reset_email
 
 UserModel = get_user_model()
 
@@ -27,7 +30,7 @@ class  IndexView(ListView):
     def get_queryset(self):
         if self.request.user.is_authenticated:
             user_genres = self.request.user.profile.music_genre_preferences.all()
-            return Post.objects.filter(genres__in=user_genres).distinct().order_by('-created_at')
+            return Post.objects.filter(genres__in=user_genres).distinct().order_by('created_at')
         else:
             return Post.objects.none()
 
@@ -165,7 +168,7 @@ class UserOwnPostsView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return Post.objects.filter(author__exact=self.request.user).order_by('-created_at')
+            return Post.objects.filter(author__exact=self.request.user).order_by('created_at')
         else:
             return Post.objects.none()
 
@@ -216,7 +219,7 @@ class OtherUserProfilePostsView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Post.objects.filter(author=self.profile.user).order_by('-created_at')
+        return Post.objects.filter(author=self.profile.user).order_by('created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -255,14 +258,13 @@ class OtherUserProfileConcertsView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Get the user whose profile we're viewing
         profile_user = get_object_or_404(UserModel, username=self.kwargs['username'])
 
-        # Concerts where the profile_user is a concertgoer
-        concertgoer_concerts = Concert.objects.filter(concertgoers=profile_user)
+        concertgoer_concerts = Concert.objects.filter(concertgoers=profile_user,
+                                                      date__gte=now()).distinct().order_by('date')
 
-        # Concerts created by the profile_user (if they are a musician)
-        created_concerts = Concert.objects.filter(musician=profile_user)
+        created_concerts = Concert.objects.filter(musician=profile_user,
+                                                  date__gte=now()).distinct().order_by('date')
 
         # Add both to the context
         context['profile_user'] = profile_user

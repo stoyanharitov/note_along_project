@@ -6,6 +6,7 @@ from NoteAlongProject.accounts.views import IndexView, SignupView, custom_logout
 
 urlpatterns = [
     #    path('admin/', admin.site.urls),
+    # User utilities views
     path('', IndexView.as_view(), name='index'),
     path('signup/', SignupView.as_view(), name='signup'),
     path('login/', CustomLoginView.as_view(), name='login'),

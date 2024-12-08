@@ -18,8 +18,6 @@ class AboutView(TemplateView):
 def search_results(request):
     query = request.GET.get('query', '')
     category = request.GET.get('category', '')
-    print(f"Search query: {query}")
-    print(f"Category selected: {category}")
 
     results = []
 
@@ -69,5 +67,5 @@ def search_results(request):
              Q(last_name__icontains=query) |
             Q(profile__music_genre_preferences__name__icontains=query))
         ).distinct().order_by('username')
-    print(results)
+
     return render(request, 'common/general-search.html', {'results': results, 'query': query, 'category': category})

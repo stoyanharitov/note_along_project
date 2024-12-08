@@ -8,25 +8,26 @@
   <ul>
     {% for concert in concerts %}
       <li>
-          <h2>{{ concert.musician }}'s {{ concert.title }}</h2>
-        - {{ concert.date }} at {{ concert.location }}
-            <strong>Genres:</strong> 
-            <span class="genres">
-                {% if concert.genres.all %}
-                    <span>{{ concert.genres.all|join:", " }}</span>
-                {% else %}
-                    <span>No genres specified.</span>
-                {% endif %}
+          <h2><a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician }}</a>'s <a href="{% url 'concert-details' concert.id %}">{{ concert.title }}</a></h2>
+          <p>- {{ concert.date }} at {{ concert.location }}</p>
+            <p>
+                <strong>Genres:</strong> 
+                <span class="genres">
+                    {% if concert.genres.all %}
+                        <span>{{ concert.genres.all|join:", " }}</span>
+                    {% else %}
+                        <span>No genres specified.</span>
+                    {% endif %}
             </span>
+            </p>
           <p>Concertgoers: {{ concert.concertgoers.count }}</p>
-          <a href="{% url 'concert-details' concert.id %}" class="btn btn-primary">Details</a>
           {% if user.profile.is_musician and concert.musician == user %}
               <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
               <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
           {% endif %}
       </li>
         {% empty %}
-        <li><p>Seems like you are not attending any concerts yet</p></li>
+        <li><p>Seems like you are not attending any concerts.</p></li>
     {% endfor %}
   </ul>
 {% endblock %}

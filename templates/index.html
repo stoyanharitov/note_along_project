@@ -19,17 +19,24 @@
             <li>
                 <h3>{{ post.title }}</h3>
                 <p>{{ post.content }}</p>
-                <p>Author: <a href="{% url 'profile-other' post.author.username %}">{{ post.author.username}}</a></p>  {#  add author anchor with link to user profile  #}
+                <p>Author: <a href="{% url 'profile-other' post.author.username %}">{{ post.author.username}}</a></p>
                 <p><strong>Genres:</strong>
                     {% for genre in post.genres.all %}
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </p>
-                    <button class="like-btn" data-post-id="{{ post.id }}" data-url="{% url 'like-post' %}">
-                        <i class="fa fa-heart{% if request.user in post.likes.all %} liked{% endif %}"></i>
-                        <span class="like-count">{{ post.total_likes }}</span>
-                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                    </button>
+                {% if post.comments.all %}
+                    {% if post.comments.count == 1 %}
+                        <p>1 Comment</p>
+                    {% else %}
+                        <p>{{ post.comments.count }} Comments</p>
+                    {% endif %}
+                {% endif %}
+                <button class="like-btn" data-post-id="{{ post.id }}" data-url="{% url 'like-post' %}">
+                    <i class="fa fa-heart{% if request.user in post.likes.all %} liked{% endif %}"></i>
+                    <span class="like-count">{{ post.total_likes }}</span>
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                </button>
                 <a href="{% url 'post-details' post.pk %}" class="btn btn-primary">Details</a>
                 {% if post.author == user %}
                     <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>

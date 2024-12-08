@@ -1,58 +1,63 @@
 {% extends 'base.html' %}
 {% block content %}
+    
 <h1><a href="{% url 'profile-other' username=profile_user.username %}">{{ profile_user.username }}</a>'s Concerts</h1>
-
-<!-- Created Concerts -->
+    
 {% if created_concerts.exists %}
-    <h2>Created Concerts</h2>
+    <h2>Upcoming Concerts</h2>
     {% for concert in created_concerts %}
       <li>
-          <h2>{{ concert.musician }}'s {{ concert.title }}</h2>
-        - {{ concert.date }} at {{ concert.location }}
-            <strong>Genres:</strong> 
-            <span class="genres">
-                {% if concert.genres.all %}
-                    <span>{{ concert.genres.all|join:", " }}</span>
-                {% else %}
-                    <span>No genres specified.</span>
-                {% endif %}
-            </span>
+          <h2><a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician }}</a>'s <a href="{% url 'concert-details' concert.id %}">{{ concert.title }}</a></h2>
+          <p>- {{ concert.date }} at {{ concert.location }}</p>
+          <p>
+              <strong>Genres:</strong> 
+              <span class="genres">
+                  {% if concert.genres.all %}
+                      <span>{{ concert.genres.all|join:", " }}</span>
+                  {% else %}
+                      <span>No genres specified.</span>
+                  {% endif %}
+              </span>
+          </p>
           <p>Concertgoers: {{ concert.concertgoers.count }}</p>
-          <a href="{% url 'concert-details' concert.id %}" class="btn btn-primary">Details</a>
           {% if user.profile.is_musician and concert.musician == user %}
               <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
               <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
           {% endif %}
       </li>
         {% empty %}
-            <p>No concerts created by {{ profile_user.username }}</p>
+            <p>No upcoming concerts by {{ profile_user.username }} at the moment</p>
     {% endfor %}
 {% elif concertgoer_concerts.exists %}
     <h2>Attending Concerts</h2>
     <ul>
     {% for concert in concertgoer_concerts %}
       <li>
-          <h2>{{ concert.musician }}'s {{ concert.title }}</h2>
-        - {{ concert.date }} at {{ concert.location }}
-            <strong>Genres:</strong> 
-            <span class="genres">
-                {% if concert.genres.all %}
-                    <span>{{ concert.genres.all|join:", " }}</span>
-                {% else %}
-                    <span>No genres specified.</span>
-                {% endif %}
-            </span>
+          <h2><a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician }}</a>'s <a href="{% url 'concert-details' concert.id %}">{{ concert.title }}</a></h2>
+          <p>- {{ concert.date }} at {{ concert.location }}</p>
+          <p>
+              <strong>Genres:</strong> 
+              <span class="genres">
+                  {% if concert.genres.all %}
+                      <span>{{ concert.genres.all|join:", " }}</span>
+                  {% else %}
+                      <span>No genres specified.</span>
+                  {% endif %}
+              </span>
+          </p>
           <p>Concertgoers: {{ concert.concertgoers.count }}</p>
-          <a href="{% url 'concert-details' concert.id %}" class="btn btn-primary">Details</a>
           {% if user.profile.is_musician and concert.musician == user %}
               <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
               <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
           {% endif %}
       </li>
         {% empty %}
-            <p>{{ profile_user.username }} is not attending any concerts.</p>
+            <h2>{{ profile_user.username }} is not attending any concerts.</h2>
     {% endfor %}
     </ul>
+    
+{% else %}
+    <h2>{{ profile_user.username }} doesn't have any upcoming concerts listed yet.</h2>
 {% endif %}
     
 {% endblock %}

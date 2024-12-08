@@ -7,7 +7,7 @@
     <ul>
         {% for festival in festivals %}
             <li>
-                <a href="{% url 'index' %}">{{ festival.title }}</a>
+                <a href="{% url 'festival-details' festival.pk %}">{{ festival.title }}</a>
                 <p>Dates: {{ festival.start_date }} - {{ festival.end_date }}</p>
                 <strong>Genres:</strong> 
                     <span class="genres">
@@ -17,6 +17,31 @@
                         <span>No genres specified.</span>
                     {% endif %}
                     </span>
+                {% if festival.concerts.all %}
+                    <p>Concerts in this festival:</p>
+                    <ul>
+                        {% for concert in festival.concerts.all %}
+                            
+    
+                            <li>
+                                <p><a href="{% url 'concert-details' concert.pk %}">
+                                    {{ concert.title }}</a>
+                                    by <a href="{% url 'profile-other' concert.musician.username %}">
+                                        {{ concert.musician.username }}
+                                    </a>
+                                </p>
+                                <p>Date: {{ concert.date }}</p>
+                                <p>Location: {{ concert.location }}</p>
+                                <p>Concertgoers: {{ concert.concertgoers.count }}</p>
+                                {% if request.user in concert.concertgoers.all %}
+                                    <p> You are also going!</p>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No concerts added yet.</p>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>

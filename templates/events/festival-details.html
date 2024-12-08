@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ festival.title }}</h1>
+<p><strong>Start Date:</strong> {{ festival.start_date }}</p>
+<p><strong>End Date:</strong> {{ festival.end_date }}</p>
+<p><strong>Location:</strong> {{ festival.location }}</p>
+<p><strong>Genres:</strong></p>
+<ul>
+    {% for genre in festival.genres.all %}
+        <li>{{ genre.name }}</li>
+    {% endfor %}
+</ul>
+<p><strong>Description:</strong> {{ festival.description }}</p>
+
+<h2>Concerts in this Festival</h2>
+<ul>
+    {% for concert in concerts %}
+        <li>
+            <a href="{% url 'concert-details' concert.pk %}">{{ concert.title }}</a> 
+            by {{ concert.musician.username }} on {{ concert.date }}
+            <p><strong>Genres:</strong>
+                <span class="genres">
+                    {% if concert.genres.all %}
+                        <span>{{ genre.name.all|join:", " }}</span>
+                    {% else %}
+                        <span>No genres specified.</span>
+                    {% endif %}
+                </span>
+            </p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

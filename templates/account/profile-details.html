@@ -18,23 +18,30 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="Profile Picture" width="150" height="150">
     {% endif %}
         {% if not profile.user.first_name and not profile.user.last_name%}
-            <p type="hidden"></p>
         {% elif not profile.user.last_name %}
             <p><strong>Username:</strong> {{ profile.user.username }}</p>
         {% elif profile.user.first_name and profile.user.last_name %}
             <p><strong>Username:</strong> {{ profile.user.username }}</p>
         {% endif %}
-        <p><strong>Age:</strong> {{ profile.age }}</p>
-        <p><strong>City:</strong> {{ profile.city }}</p>
+        <p>
+            <strong>Age:</strong>
+                {% if profile.age %}{{ profile.age }}{% else %}N/A{% endif %}
+        <p>
+            <strong>City:</strong>
+                {% if profile.city %}{{ profile.city }}{% else %}N/A{% endif %}
+        </p>
         <div><strong>Music Genres:</strong> 
-            <span>{% for genre in profile.music_genre_preferences.all %}
+            {% for genre in profile.music_genre_preferences.all %}
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}</span>
+            {% empty %}
+                N/A
+            {% endfor %}
         </div>
         <p><a href="{% url 'profile-posts' %}">My posts</a></p>
         <p><a href="{% url 'concert-list' %}">My concerts</a></p>
         <p><a href="{% url 'festival-list' %}">My festivals</a></p>
         <p><a href="{% url 'profile-edit' %}">Edit Profile</a></p>
+        <p><a href="{% url 'password_reset' %}">Reset Password</a></p>
         <p><a href="{% url 'profile-delete' %}" class="btn btn-danger">Delete Profile</a></p>
     </div>
 {% endblock %}

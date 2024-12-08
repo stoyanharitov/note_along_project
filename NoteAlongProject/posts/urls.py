@@ -1,10 +1,17 @@
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 from NoteAlongProject.posts.views import PostCreateView, like_post, PostEditView, PostDetailView, add_comment, \
-    CommentDeleteView, like_comment, edit_comment
+    CommentDeleteView, like_comment, edit_comment, PostViewSet, CommentViewSet
+
+router = DefaultRouter()
+router.register(r'posts', PostViewSet, basename='post-api')
+router.register(r'comments', CommentViewSet, basename='comment-api')
 
 urlpatterns = [
-    #    path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    path('api/posts/<int:pk>/', PostViewSet.as_view({'get': 'list'}), name='post-api-detail'),
+    path('api/comments/<int:pk>/', CommentViewSet.as_view({'get': 'list'}), name='comment-api-detail'),
     path('create/', PostCreateView.as_view(), name='post-create'),
     path('like-post/', like_post, name='like-post'),
     path('<int:post_pk>/', include([

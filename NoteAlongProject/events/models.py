@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -15,6 +16,12 @@ class Concert(models.Model):
     concertgoers = models.ManyToManyField(UserModel, blank=True, related_name='concertgoers')
     genres = models.ManyToManyField(Genre, blank=True, related_name='concerts')
     festival = models.ForeignKey('Festival', on_delete=models.CASCADE, related_name='concerts', null=True, blank=True)
+
+
+    def save(self, *args, **kwargs):
+        if self.musician and not getattr(self.musician.profile, 'is_musician', False):
+            raise ValidationError(f"The user '{self.musician.username}' is not a musician.")
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
