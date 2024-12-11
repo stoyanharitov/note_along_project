@@ -123,6 +123,7 @@ Ensure you have the following installed:
 - Custom JS functions implemented for UX for expanding a list of concertgoers.
 - Custom forms used for the App.
 - There are dashboard pages for festivals and concerts where the user will see upcoming events based on their chosen genres.
+- REST endpoints added with Django REST framework for festivals and concerts with custom permissions set up to provide common sense CRUD availability to the different types of users.
 
 3. **Posts**
    - Create and interact with music-related posts.
@@ -131,6 +132,7 @@ Ensure you have the following installed:
 - Custom JS functions implemented for UX for features like - like buttons and commenting and editing comments.
 - Custom forms used for the App.
 - The index page is currently used to display posts to the user that match the selected genres in their profile if the user is authenticated.
+- REST endpoints added with Django REST framework for events and comments with custom permissions set up to provide common sense CRUD availability to the different types of users.
 
 4. **Search**
    - Search for musicians, users, events, or posts using advanced filters.
