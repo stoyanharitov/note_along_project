@@ -1,4 +1,6 @@
-Welcome to the **Note Along**! 🎶 This Django-based application allows users to explore music-related events, such as concerts and festivals, based on their favorite genres. Users can also interact with others through posts, comments, and likes, and discover musicians or connect with fellow music enthusiasts.
+Welcome to **Note Along**! 🎶 This Django-based application allows users to explore music-related events, such as concerts and festivals, based on their favorite genres.
+
+Users can also interact with others through posts, comments, and likes, and discover musicians or connect with fellow music enthusiasts.
 
 ---
 
@@ -120,6 +122,7 @@ Ensure you have the following installed:
 - There are tests set up for Events.
 - Custom JS functions implemented for UX for expanding a list of concertgoers.
 - Custom forms used for the App.
+- There are dashboard pages for festivals and concerts where the user will see upcoming events based on their chosen genres.
 
 3. **Posts**
    - Create and interact with music-related posts.
@@ -127,6 +130,7 @@ Ensure you have the following installed:
 
 - Custom JS functions implemented for UX for features like - like buttons and commenting and editing comments.
 - Custom forms used for the App.
+- The index page is currently used to display posts to the user that match the selected genres in their profile if the user is authenticated.
 
 4. **Search**
    - Search for musicians, users, events, or posts using advanced filters.
