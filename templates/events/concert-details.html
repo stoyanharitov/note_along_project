@@ -3,6 +3,7 @@
 {% block content %}
     {% load static %}
     {% load exclude_user_from_q %}
+    <div class="about-container">
   <h1>{{ concert.musician }}'s {{ concert.title }}</h1>
   <p><strong>Date:</strong> {{ concert.date }}</p>
   <p><strong>Location:</strong> {{ concert.location }}</p>
@@ -14,10 +15,12 @@
     {% endif %}
   </p>
   {% if user.profile.is_musician and concert.musician == user %}
-    <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit Concert</a>
-    <a href="{% url 'concert-delete' concert.id %}" class="btn btn-danger">Delete</a>
+      <div class="btn-group">
+        <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit Concert</a>
+        <a href="{% url 'concert-delete' concert.id %}" class="btn btn-danger">Delete</a>
+      </div>
   {% endif %}
-    <p id="concertgoers-count">Concertgoers: {{ concert.concertgoers.count }}</p>
+    <p id="concertgoers-count"><strong>Concertgoers:</strong> {{ concert.concertgoers.count }}</p>
     
   {% if user.is_authenticated and not user.profile.is_musician %}
     <button class="toggle-attendance-btn"
@@ -42,7 +45,6 @@
     {% endif %}
 
 <ul id="concertgoers-list" style="display: none;"></ul>
-    
 {% if concert.concertgoers %}
     <script id="concertgoers-data" type="application/json">
         [
@@ -60,7 +62,7 @@
         ]
     </script>
 {% endif %}
-
+    </div>
 
     <script src="{% static 'js/js-attend-concert-func.js' %}"></script>
     <script src="{% static 'js/concertgoers-list-func.js' %}"></script>

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<body>
+    <h1>Confirm Deletion</h1>
+    <p>Are you sure you want to delete this post?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Yes, delete</button>
+    </form>
+    <button>
+        <a href="{% url 'post-details' post.pk %}" class="btn btn-primary">Cancel</a>
+    </button>
+    <script src="{% static 'js/multicheck-box-func.js' %}"></script>
+{% endblock %}

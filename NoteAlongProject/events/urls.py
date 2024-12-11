@@ -1,9 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from NoteAlongProject.events.views import ConcertCreateView, ConcertListView, ConcertEditView, ConcertDetailView, \
-    concert_toggle_attendance, ConcertDeleteView, ConcertsDashboardView, FestivalDashboardView, FestivalListView, \
-    FestivalDetailView, ConcertViewSet, FestivalViewSet
+from NoteAlongProject.events.views.concert_views import ConcertViewSet, ConcertCreateView, UserConcertListView, \
+    ConcertsDashboardView, ConcertEditView, ConcertDeleteView, ConcertDetailView, concert_toggle_attendance
+from NoteAlongProject.events.views.festival_views import FestivalViewSet, UserFestivalListView, FestivalDashboardView, \
+    FestivalDetailView
 
 router = DefaultRouter()
 router.register(r'concerts', ConcertViewSet, basename='concert-api')
@@ -18,7 +19,7 @@ urlpatterns = [
     # Concert urls
     path('create-concert/', ConcertCreateView.as_view(), name='concert-create'),
     path('concerts/', include([
-        path('', ConcertListView.as_view(), name='concert-list'),
+        path('', UserConcertListView.as_view(), name='concert-list'),
         path('dashboard/', ConcertsDashboardView.as_view(), name='concert-dashboard'),
         path('edit/<int:pk>/', ConcertEditView.as_view(), name='concert-edit'),
         path('delete/<int:pk>/', ConcertDeleteView.as_view(), name='concert-delete'),
@@ -28,9 +29,10 @@ urlpatterns = [
                       ]))
     ])),
 
+
         # Festival urls
         path('festivals/', include([
-            path('', FestivalListView.as_view(), name='festival-list'),
+            path('', UserFestivalListView.as_view(), name='festival-list'),
             path('dashboard/', FestivalDashboardView.as_view(), name='festival-dashboard'),
             path('details/<int:pk>', FestivalDetailView.as_view(), name='festival-details'),
         ])),

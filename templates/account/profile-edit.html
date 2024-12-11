@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+    {% load static %}
     <h1>Edit Your Profile</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save Changes</button>
     </form>
-    <a href="{% url 'profile-details' %}">Cancel</a>
+
+    <button><a href="{% url 'profile-details' %}">Cancel</a></button>
+
+     <script src="{% static 'js/multicheck-box-func.js' %}"></script>
 {% endblock %}

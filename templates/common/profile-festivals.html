@@ -1,30 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="about-container">
 <h1>Festivals You're Attending</h1>
 
 {% if festivals %}
     <ul>
         {% for festival in festivals %}
             <li>
-                <a href="{% url 'festival-details' festival.pk %}">{{ festival.title }}</a>
+                <h2><a href="{% url 'festival-details' festival.pk %}">{{ festival.title }}</a></h2>
+            <br>
                 <p>Dates: {{ festival.start_date }} - {{ festival.end_date }}</p>
-                <strong>Genres:</strong> 
+                <p><strong>Genres:</strong> 
                 <span class="genres">
                     {% if festival.genres.all %}
                         <span>{{ festival.genres.all|join:", " }}</span>
                     {% else %}
                         <span>No genres specified.</span>
                     {% endif %}
-                </span>
+                </span></p>
                 {% if festival.concerts.all %}
-                    <p>Concerts in this festival:</p>
+                    <br>
+                    <h3>Concerts in this festival:</h3>
                     <ul>
                         {% for concert in festival.concerts.all %}
                             
     
                             <li>
-                                <p><a href="{% url 'concert-details' concert.pk %}">
+                                <p>Concert: <a href="{% url 'concert-details' concert.pk %}">
                                     {{ concert.title }}</a>
                                     by <a href="{% url 'profile-other' concert.musician.username %}">
                                         {{ concert.musician.username }}
@@ -45,34 +48,10 @@
             </li>
         {% endfor %}
     </ul>
-    
-    {% if is_paginated %}
-            <div class="pagination">
-                <ul>
-                    <!-- "Previous" button -->
-                    {% if page_obj.has_previous %}
-                        <li><a href="?page=1">&laquo; First</a></li>
-                        <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-                    {% endif %}
-
-                    <!-- Numbered page links -->
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <li class="active"><span>{{ num }}</span></li>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <li><a href="?page={{ num }}">{{ num }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-
-                    <!-- "Next" button -->
-                    {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endif %}
 {% else %}
+    <br>
     <p>You are not attending any festivals yet.</p>
 {% endif %}
+    </div>
+{% include 'common/pagination.html' %}
 {% endblock %}

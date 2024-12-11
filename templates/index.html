@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    
+    <div class="about-container">
 {% if user.is_authenticated %}
     {% if last_name and first_name %}
         <h1>Hello {{ first_name }} {{ last_name }} and welcome to our world of music!</h1>
@@ -9,16 +9,20 @@
     {% else %}
         <h1>Hello {{ username }} and welcome to our world of music!</h1>
     {% endif %}
-    
-    <a href="{% url 'post-create' %}">Create a post</a>
-    
+    <div class="btn-group">
+        <button><a class="btn btn-primary" href="{% url 'post-create' %}">Create a post</a></button>
+    </div>
+    <br>
+    <br>
     {% if posts %}
-        <p>These posts may interest you</p>
+        <h2>These posts may interest you</h2>
         <ul>
         {% for post in posts %}
             <li>
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.content }}</p>
+                <h2>{{ post.title }}</h2>
+                <br>
+                <p>- {{ post.content }}</p>
+            <br>
                 <p>Author: <a href="{% url 'profile-other' post.author.username %}">{{ post.author.username}}</a></p>
                 <p><strong>Genres:</strong>
                     {% for genre in post.genres.all %}
@@ -37,47 +41,28 @@
                     <span class="like-count">{{ post.total_likes }}</span>
                     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                 </button>
-                <a href="{% url 'post-details' post.pk %}" class="btn btn-primary">Details</a>
-                {% if post.author == user %}
-                    <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
-                {% endif %}
+                <div class="btn-group">
+                    <a href="{% url 'post-details' post.pk %}" class="btn btn-primary">Details</a>
+                    {% if post.author == user %}
+                        <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'post-delete' post.pk %}" class="btn btn-danger">Delete</a>
+                
+                    {% endif %}
+                </div>
             </li>
         {% endfor %}
         </ul>
-        
-        {% if is_paginated %}
-            <div class="pagination">
-                <ul>
-                    <!-- "Previous" button -->
-                    {% if page_obj.has_previous %}
-                        <li><a href="?page=1">&laquo; First</a></li>
-                        <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-                    {% endif %}
-        
-                    <!-- Numbered page links -->
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <li class="active"><span>{{ num }}</span></li>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <li><a href="?page={{ num }}">{{ num }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-        
-                    <!-- "Next" button -->
-                    {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endif %}
+        {% include 'common/pagination.html' %}
         
     {% else %}
-        <p>No posts found with your preferred genres.</p>
+        <br>
+        <h3>No posts found with your preferred genres.</h3>
+        <p><br><br>You can modify your Genre Preferences <a href="{% url 'profile-edit' %}">here</a>.</p>
     {% endif %}
 {% else %}
-    <p>You are not logged in. Please <a href="{% url 'login' %}">log in</a> to view personalized posts.</p>
-    <p>If you don't have an account you can <a href="{% url 'signup' %}">sign up</a> for free to join our music world!</p>
+    <h1>You are not logged in. Please <a href="{% url 'login' %}">log in</a> to browse NoteAlong</h1>
+    <br>
+    <h2>If you don't have an account you can <strong><a href="{% url 'signup' %}">sign up</a></strong> for free to join our music world!</h2>
 {% endif %}
-    
+    </div>
 {% endblock %}

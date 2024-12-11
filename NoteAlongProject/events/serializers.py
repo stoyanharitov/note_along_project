@@ -32,23 +32,27 @@ class ConcertSerializer(serializers.ModelSerializer):
 
     def get_detail_url(self, obj):
         request = self.context.get('request')
+
         return reverse_lazy('concert-api-detail', args=[obj.pk], request=request)
 
     def validate_concertgoers(self, value):
         user = self.context['request'].user
         if user.id in [concertgoer.id for concertgoer in value]:
             raise ValidationError("You cannot add yourself as a concertgoer.")
+
         return value
 
     def validate_concertgoers(self, value):
         user = self.context['request'].user
         if user.id in [concertgoer.id for concertgoer in value]:
             raise ValidationError("You cannot add yourself as a concertgoer.")
+
         return value
 
     def validate_date(self, value):
         if value < timezone.now():
             raise ValidationError("The concert date cannot be in the past.")
+
         return value
 
 
@@ -69,6 +73,7 @@ class FestivalSerializer(serializers.ModelSerializer):
 
     def get_detail_url(self, obj):
         request = self.context.get('request')
+
         return reverse_lazy('festival-api-detail', args=[obj.pk], request=request)
 
     def validate_start_date(self, value):
@@ -84,4 +89,5 @@ class FestivalSerializer(serializers.ModelSerializer):
                     raise ValidationError("The festival start date must be before the end date.")
             except ValueError:
                 raise ValidationError("The end date format is invalid.")
+
         return value

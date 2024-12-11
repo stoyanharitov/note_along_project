@@ -1,34 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="about-container">
 <h1>{{ festival.title }}</h1>
+        <br>
 <p><strong>Start Date:</strong> {{ festival.start_date }}</p>
 <p><strong>End Date:</strong> {{ festival.end_date }}</p>
 <p><strong>Location:</strong> {{ festival.location }}</p>
-<p><strong>Genres:</strong></p>
-<ul>
-    {% for genre in festival.genres.all %}
-        <li>{{ genre.name }}</li>
-    {% endfor %}
-</ul>
+<p><strong>Genres:</strong>
+    {% if festival.genres.all %}
+        {% for genre in festival.genres.all %}
+        {{ genre.name }}
+            {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    {% else %}
+        No genres specified.
+    {% endif %}
 <p><strong>Description:</strong> {{ festival.description }}</p>
-
-<h2>Concerts in this Festival</h2>
+<br>
+<h3>Concerts in this Festival:</h3>
 <ul>
     {% for concert in concerts %}
         <li>
-            <a href="{% url 'concert-details' concert.pk %}">{{ concert.title }}</a> 
-            by {{ concert.musician.username }} on {{ concert.date }}
+            <p><strong><a href="{% url 'concert-details' concert.pk %}">{{ concert.title }}</a></strong>
+                by <a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician.username }}</a> on {{ concert.date }}</p>
             <p><strong>Genres:</strong>
-                <span class="genres">
-                    {% if concert.genres.all %}
-                        <span>{{ genre.name.all|join:", " }}</span>
-                    {% else %}
-                        <span>No genres specified.</span>
-                    {% endif %}
-                </span>
+                {% if concert.genres.all %}
+                    {% for genre in concert.genres.all %}
+                    {{ genre.name }}
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    No genres specified.
+                {% endif %}
             </p>
         </li>
     {% endfor %}
 </ul>
+    </div>
 {% endblock %}

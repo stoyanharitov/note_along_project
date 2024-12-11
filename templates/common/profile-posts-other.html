@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-
-
-
+    <div class="about-container">
 {% if posts %}
     <h1>This is what <a href="{% url 'profile-other' profile_username %}">{{ profile_username }}</a> has posted</h1>
         <ul>
         {% for post in posts %}
             <li>
                 <h3>{{ post.title }}</h3>
-                <p>{{ post.content }}</p>
+                <br>
+                <p>- {{ post.content }}</p>
+                <br>
                 <p><strong>Genres:</strong>
                     {% for genre in post.genres.all %}
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
@@ -27,40 +27,15 @@
                         <span class="like-count">{{ post.total_likes }}</span>
                         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                     </button>
-                <a href="{% url 'post-details' post.pk %}" class="btn btn-primary">Details</a>
+                <div class="btn-group">
+                    <a href="{% url 'post-details' post.pk %}" class="btn btn-primary">Details</a>
+                </div>    
             </li>
         {% endfor %}
         </ul>
-        
-        {% if is_paginated %}
-            <div class="pagination">
-                <ul>
-                    <!-- "Previous" button -->
-                    {% if page_obj.has_previous %}
-                        <li><a href="?page=1">&laquo; First</a></li>
-                        <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-                    {% endif %}
-        
-                    <!-- Numbered page links -->
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <li class="active"><span>{{ num }}</span></li>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <li><a href="?page={{ num }}">{{ num }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-        
-                    <!-- "Next" button -->
-                    {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endif %}
-    
+    {% include 'common/pagination.html' %}
     {% else %}
         <h1>Looks like <a href="{% url 'profile-other' profile_username %}">{{ profile_username }}</a> has not posted anything yet :(</h1>
     {% endif %}
-
+    </div>
 {% endblock %}

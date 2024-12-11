@@ -1,35 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="about-container">
 <h1>Explore festivals</h1>
-    {% if profile.music_genre_preferences %}
-        <p>Your favorite genres:
-            <span>{{ profile.music_genre_preferences.all|join:", " }} </span>
-        </p>
-    {% else %}
-        <p>You haven't selected any genres yet.</p>
-    {% endif %}
+    <br>
+{% if profile.music_genre_preferences.exists %}
+    <p><strong>Your favorite genres:</strong>
+        <span>{{ profile.music_genre_preferences.all|join:", " }} </span>
+    </p>
+{% else %}
+    <p>You haven't selected any genres yet. You can do that <a href="{% url 'profile-edit' %}">here</a>.</p>
+{% endif %}
     
 {% if festivals %}
     <ul>
         {% for festival in festivals %}
             <li>
-                <a href="{% url 'festival-details' festival.pk %}">{{ festival.title }}</a>
-                <p>Timeline: {{ festival.start_date }} - {{ festival.end_date }}</p>
-                <p>Genres: <span>{{ festival.genres.all|join:", " }}</span></p>
+                <strong><h2><a href="{% url 'festival-details' festival.pk %}">{{ festival.title }}</a></h2></strong>
+            <br>
+                <p><strong>Timeline:</strong> {{ festival.start_date }} - {{ festival.end_date }}</p>
+                <p><strong>Genres:</strong> <span>{{ festival.genres.all|join:", " }}</span></p>
                 {% if festival.concerts.all %}
-                    <p>Concerts in this festival:</p>
-                    <ul>
+                    <br>
+                    <h3>Concerts in this festival:</h3>
+                    <ul class="concerts-in-f">
                         {% for concert in festival.concerts.all %}
                             
     
                             <li>
-                                <p><a href="{% url 'concert-details' concert.pk %}">
-                                    {{ concert.title }}</a>
+                                <p>Concert: <a href="{% url 'concert-details' concert.pk %}">
+                                    <strong>{{ concert.title }}</strong></a>
                                     by <a href="{% url 'profile-other' concert.musician.username %}">
                                         {{ concert.musician.username }}
                                     </a>
                                 </p>
+                                <br>
                                 <p>Date: {{ concert.date }}</p>
                                 <p>Location: {{ concert.location }}</p>
                                 <p>Concertgoers: {{ concert.concertgoers.count }}</p>
@@ -45,7 +50,11 @@
             </li>
         {% endfor %}
     </ul>
+    {% include 'common/pagination.html' %}
 {% else %}
+    <br>
     <p>No festivals found matching your preferences.</p>
 {% endif %}
+    </div>
+    
 {% endblock %}

@@ -1,28 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<div class="about-container">
 <h1>Explore concerts</h1>
-
+{% if user.profile.is_musician %}
+    <div class="btn-group">
+        <p><a href="{% url 'concert-create' %}" class="btn btn-primary">Create a New Concert</a></p>
+    </div>
+{% endif %}
+    <br>
 {% if profile.music_genre_preferences.exists %}
-    <p>Your favorite genres:
+    <p><strong>Your favorite genres:</strong>
         <span>{{ profile.music_genre_preferences.all|join:", " }} </span>
     </p>
 {% else %}
-    <p>You haven't selected any genres yet.</p>
+    <p>You haven't selected any genres yet. You can do that <a href="{% url 'profile-edit' %}">here</a>.</p>
 {% endif %}
-
-<h2>Concert Recommendations</h2>
 <ul>
     {% for concert in concerts %}
         <li>
-            <a href="{% url 'concert-details' concert.pk %}">{{ concert.title }}</a> 
+            <p><strong><a href="{% url 'concert-details' concert.pk %}">{{ concert.title }}</a></strong>
             by <a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician.username }}</a><br>
-            Date: {{ concert.date|date:"F j, Y, g:i a" }}<br>
-            Location: {{ concert.location }}<br>
-            Genres: 
+                                <br>
+                <br>
+            <strong>Date:</strong> {{ concert.date|date:"F j, Y, g:i a" }}
+            <strong>Location:</strong> {{ concert.location }}<br></p>
+            <p><strong>Genres: </strong>
             {% for genre in concert.genres.all %}
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
+            {% endfor %}</p>
                 <p>Concertgoers: {{ concert.concertgoers.count }}</p>
             {% if user != concert.musician and user in concert.concertgoers.all %}
                 <p>You are going!</p>
@@ -32,5 +37,6 @@
         <p>No concerts match your preferences at the moment.</p>
     {% endfor %}
 </ul>
-
+    {% include 'common/pagination.html' %}
+</div>
 {% endblock %}

@@ -3,13 +3,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
+from django.core.validators import MinLengthValidator, MinValueValidator
+
 
 UserModel = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(to=UserModel, on_delete=models.CASCADE, related_name='profile', primary_key=True)
-    age = models.PositiveIntegerField(null=True, blank=True)
-    city = models.CharField(max_length=100, blank=True)
+    age = models.PositiveIntegerField(null=True,
+                                      blank=True,
+                                      validators=[MinValueValidator(18)],
+                                      help_text="Can't be under 18",)
+    city = models.CharField(max_length=100,
+                            blank=True,
+                            validators = [MinLengthValidator(5)])
     music_genre_preferences = models.ManyToManyField(to='Genre', blank=True)
     profile_pic = models.URLField(blank=True, null=True)
     is_musician = models.BooleanField(default=False)
@@ -35,7 +42,12 @@ class Profile(models.Model):
 
 # need to create a custom migration for the genres in choices file
 class Genre(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50,
+                            null = False,
+                            blank = False,
+                            unique = True,
+                            validators = [MinLengthValidator(2)],
+                            error_messages = {'unique': "Seems like the genre is already registered"})
 
     def __str__(self):
         return self.name

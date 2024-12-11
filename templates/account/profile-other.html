@@ -9,7 +9,7 @@
         <h1>{{ profile.user.username }}'s Profile</h1>
     {% endif %}
     {% if profile.is_musician %}
-        <span>Musician</span>
+        <span class="musician-tag">Musician</span>
     {% endif %}
     
     {% if profile.profile_pic %}
@@ -35,10 +35,12 @@
             {% empty %}
                 N/A
             {% endfor %}
+                <br>
+        <br>
         </div>
-        <a href="{% url 'profile-posts-other' username=username %}">Posts</a>
-        <a href="{% url 'profile-concerts-other' username=username %}">Concerts</a>
-        <a href="{% url 'profile-festivals-other' username=username %}">Festivals</a>
+        <p><a href="{% url 'profile-posts-other' username=username %}">Posts</a></p>
+        <p><a href="{% url 'profile-concerts-other' username=username %}">Concerts</a></p>
+        <p><a href="{% url 'profile-festivals-other' username=username %}">Festivals</a></p>
         
     </div>
 {% endblock %}

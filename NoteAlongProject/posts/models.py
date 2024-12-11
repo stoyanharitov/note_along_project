@@ -10,7 +10,7 @@ class Post(models.Model):
     content = models.TextField(verbose_name="Post Content")
     author = models.ForeignKey(to=UserModel, on_delete=models.CASCADE, related_name="posts")
     likes = models.ManyToManyField(to=UserModel, related_name="liked_posts", blank=True)
-    genres = models.ManyToManyField(to=Genre, related_name='posts')
+    genres = models.ManyToManyField(to=Genre, blank=False, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property

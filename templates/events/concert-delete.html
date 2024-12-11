@@ -12,8 +12,8 @@
       Delete Concert
     </button>
   </form>
-
-  <a href="{% url 'concert-list' %}">
+    <button>
+  <a href="{% url 'concert-details' concert.id %}">
     Cancel
-  </a>
+  </a></button>
 {% endblock %}

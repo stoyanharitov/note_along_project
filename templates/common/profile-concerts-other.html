@@ -1,39 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
+    <div class="about-container">
+<h1><a href="{% url 'profile-other' profile_user.username %}"> {{ profile_user.username }}</a>'s concerts</h1>
+    <br>
     
-<h1><a href="{% url 'profile-other' username=profile_user.username %}">{{ profile_user.username }}</a>'s Concerts</h1>
-    
-{% if created_concerts.exists %}
-    <h2>Upcoming Concerts</h2>
-    {% for concert in created_concerts %}
-      <li>
-          <h2><a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician }}</a>'s <a href="{% url 'concert-details' concert.id %}">{{ concert.title }}</a></h2>
-          <p>- {{ concert.date }} at {{ concert.location }}</p>
-          <p>
-              <strong>Genres:</strong> 
-              <span class="genres">
-                  {% if concert.genres.all %}
-                      <span>{{ concert.genres.all|join:", " }}</span>
-                  {% else %}
-                      <span>No genres specified.</span>
-                  {% endif %}
-              </span>
-          </p>
-          <p>Concertgoers: {{ concert.concertgoers.count }}</p>
-          {% if user.profile.is_musician and concert.musician == user %}
-              <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
-              <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
-          {% endif %}
-      </li>
-        {% empty %}
-            <p>No upcoming concerts by {{ profile_user.username }} at the moment</p>
-    {% endfor %}
-{% elif concertgoer_concerts.exists %}
-    <h2>Attending Concerts</h2>
+{% if concerts.exists %}
+    <h2>Upcoming Concerts for <a href="{% url 'profile-other' profile_user.username %}"> {{ profile_user.username }}</a></h2>
     <ul>
-    {% for concert in concertgoer_concerts %}
+    {% for concert in concerts %}
       <li>
           <h2><a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician }}</a>'s <a href="{% url 'concert-details' concert.id %}">{{ concert.title }}</a></h2>
+          <br>
           <p>- {{ concert.date }} at {{ concert.location }}</p>
           <p>
               <strong>Genres:</strong> 
@@ -47,17 +24,19 @@
           </p>
           <p>Concertgoers: {{ concert.concertgoers.count }}</p>
           {% if user.profile.is_musician and concert.musician == user %}
-              <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
-              <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
+              <div class="btn-group">
+                  <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
+                  <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
+              </div>
           {% endif %}
       </li>
-        {% empty %}
-            <h2>{{ profile_user.username }} is not attending any concerts.</h2>
     {% endfor %}
     </ul>
     
+{% include 'common/pagination.html' %}
+
 {% else %}
-    <h2>{{ profile_user.username }} doesn't have any upcoming concerts listed yet.</h2>
+    <h3>{{ profile_user.username }} doesn't have any upcoming concerts listed currently. :(</h3>
 {% endif %}
-    
+    </div>
 {% endblock %}

@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG')
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
@@ -35,7 +35,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 CUSTOM_APPS =['NoteAlongProject.accounts',
               'NoteAlongProject.posts',
               'NoteAlongProject.events',
-              'common',
+              'NoteAlongProject.common',
               ]
 
 INSTALLED_APPS = [
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_select2',
 ] + CUSTOM_APPS
 
 MIDDLEWARE = [
@@ -137,9 +138,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Adjust to your static folder path
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # For collectstatic
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -147,10 +150,12 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# Redirect URLs
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGIN_URL = reverse_lazy('login')
 
 
+# Logging details
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -174,16 +179,14 @@ LOGGING = {
     },
 }
 
-# MAILJET_API_KEY = config('MAILJET_API_KEY')
-# MAILJET_SECRET_KEY = config('MAILJET_SECRET_KEY')
 
-
-# REST SETTINGS
+# REST Settings
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
 
 # SMTP settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

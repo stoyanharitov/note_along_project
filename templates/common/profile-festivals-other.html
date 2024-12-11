@@ -1,30 +1,33 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>Festivals Attended by <a href="{% url 'profile-other' username=profile_user.username %}">{{ profile_user.username }}</a></h1>
+    
+    <div class="about-container">
+<h1>Festivals <a href="{% url 'profile-other' username=profile_user.username %}">{{ profile_user.username }}</a> is attending</h1>
 
 {% if festivals %}
     <ul>
         {% for festival in festivals %}
             <li>
-                <a href="{% url 'festival-details' festival.pk %}">{{ festival.title }}</a>
+                <h2><a href="{% url 'festival-details' festival.pk %}">{{ festival.title }}</a></h2>
+            <br>
                 <p>Dates: {{ festival.start_date }} - {{ festival.end_date }}</p>
-                <strong>Genres:</strong> 
+                <p><strong>Genres:</strong> 
                     <span class="genres">
                     {% if festival.genres.all %}
                         <span>{{ festival.genres.all|join:", " }}</span>
                     {% else %}
                         <span>No genres specified.</span>
                     {% endif %}
-                    </span>
+                    </span></p>
                 {% if festival.concerts.all %}
-                    <p>Concerts in this festival:</p>
+                    <br>
+                    <h3>Concerts in this festival:</h3>
                     <ul>
                         {% for concert in festival.concerts.all %}
                             
     
                             <li>
-                                <p><a href="{% url 'concert-details' concert.pk %}">
+                                <p>Concert: <a href="{% url 'concert-details' concert.pk %}">
                                     {{ concert.title }}</a>
                                     by <a href="{% url 'profile-other' concert.musician.username %}">
                                         {{ concert.musician.username }}
@@ -45,7 +48,10 @@
             </li>
         {% endfor %}
     </ul>
+    {% include 'common/pagination.html' %}
 {% else %}
-    <p>No upcoming festivals for {{ profile_user.username }}.</p>
+    <br>
+    <h3>No upcoming festivals for {{ profile_user.username }}.</h3>
 {% endif %}
+    </div>
 {% endblock %}

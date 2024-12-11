@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-    
+    <div class="about-container">
 <h1>{{ post.title }}</h1>
-    <p>By <a href="{% url 'profile-other' post.author.username %}">{{ post.author.username }}</a> | {{ post.created_at }}</p>
-<p>{{ post.content }}</p>
+    <h3>By <a href="{% url 'profile-other' post.author.username %}">{{ post.author.username }}</a> | {{ post.created_at }}</h3>
+    <br>
+    <p>- {{ post.content }}</p>
+    <br>
     
 {% if user.is_authenticated %}
     <button class="like-btn" data-post-id="{{ post.id }}" data-url="{% url 'like-post' %}">
@@ -14,17 +16,22 @@
     </button>
 {% endif %}
     {% if post.author == user %}
-        <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
+        <div class="btn-group">
+            <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'post-delete' post.pk %}" class="btn btn-danger">Delete</a>
+        </div>
     {% endif %}
 {% if user.is_authenticated %}
     
 {% endif %}
-
-<h3>Comments</h3>
+<br>
+<h3>Comments:</h3>
 <ul>
     {% for comment in comments %}
         <div class="comment" id="comment-{{ comment.id }}">
-            <li><p><strong>{{ comment.author.username }}</strong>:</p> <p class="comment-content">{{ comment.content }}<p></li>
+            <li class="comment-li"><p><strong>{{ comment.author.username }}</strong>:</p><br> 
+                <p class="comment-content">- {{ comment.content }}<p></li>
+            
             {% if comment.author == user %}
                 <!-- Edit Button -->
                 <button
@@ -34,9 +41,10 @@
                 >
                     Edit
                 </button>
-
-                <!-- Edit Form (Hidden by Default) -->
+                
+                    <!-- Edit Form (Hidden by Default) -->
                 <form class="edit-form" data-comment-id="{{ comment.id }}" style="display: none;">
+                    <p>Edit your comment:</p>
                     <textarea class="form-control edit-content">{{ comment.content }}</textarea>
                     <button
                         type="button"
@@ -78,10 +86,12 @@
 
 {% if user.is_authenticated %}
     <form method="post" action="{% url 'add-comment' post.id %}">
+        <p>Comment on this post:</p>
         {% csrf_token %}
-        <textarea name="content" rows="4" required></textarea>
+        <textarea name="content" rows="4" required placeholder="Write your comment here..."></textarea>
         <button type="submit">Add Comment</button>
     </form>
 {% endif %}
     <script src="{% static 'js/comment-edit.js' %}"></script>
+    </div>
 {% endblock %}

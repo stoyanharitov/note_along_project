@@ -9,7 +9,7 @@
         <h1>{{ profile.user.username }}'s Profile</h1>
     {% endif %}
     {% if profile.is_musician %}
-    <span> Musician </span>
+    <span class="musician-tag"> Musician </span>
     {% endif %}
     
     {% if profile.profile_pic %}
@@ -36,6 +36,8 @@
             {% empty %}
                 N/A
             {% endfor %}
+        <br>
+        <br>
         </div>
         <p><a href="{% url 'profile-posts' %}">My posts</a></p>
         <p><a href="{% url 'concert-list' %}">My concerts</a></p>

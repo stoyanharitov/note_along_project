@@ -1,21 +1,61 @@
 {% extends 'base.html' %}
 {% block content %}
-
-    <div class="content">
-        <section class="about-section">
-            <h2>Welcome to NoteAlong</h2>
-            <p>
-                We are dedicated to bringing you the best content and experiences. Our team is passionate about creating a platform
-                where users can connect, learn, and grow together. If you have any questions or feedback, don't hesitate to reach out.
-            </p>
-            <p>
-                <strong>Email us at:</strong> 
-                <a href="mailto:stoyanharitov@gmail.com">stoyanharitov@gmail.com</a>
-            </p>
-        </section>
+{##}
+{#    <div class="content">#}
+{#        <section class="about-section">#}
+{#            <h2>Welcome to NoteAlong</h2>#}
+{#            <p>#}
+{#                We are dedicated to bringing you the best content and experiences. Our team is passionate about creating a platform#}
+{#                where users can connect, learn, and grow together. If you have any questions or feedback, don't hesitate to reach out.#}
+{#            </p>#}
+{#            <p>#}
+{#                <strong>Email us at:</strong> #}
+{#                <a href="mailto:stoyanharitov@gmail.com">stoyanharitov@gmail.com</a>#}
+{#            </p>#}
+{#        </section>#}
+{#    </div>#}
+{#    <footer class="footer">#}
+{#        <p>&copy; 2024 NoteAlong. All rights reserved.</p>#}
+{#    </footer>#}
+    <div class="about-container">
+        <h1>About Note Along</h1>
+        <br>
+        <p>
+            Welcome to <strong>Note Along</strong>, the ultimate destination for music lovers and creators alike. 
+            Whether you're a die-hard fan, a rising musician, or someone who just loves discovering new beats, 
+            we’re here to connect you with the vibrant world of music.
+        </p>
+        <br>
+        <h2>Our Mission</h2>
+        <br>
+        <p>
+            At Note Along, we believe music is more than sound—it's a way to unite people, share emotions, and 
+            build memories. Our mission is to bring the global music community closer, one note at a time. From 
+            intimate concerts to massive festivals, from heartfelt posts to discovering local talent, we’re 
+            creating a space where music speaks louder than words.
+        </p>
+        <br>
+        <h2>What We Offer</h2>
+        <ul>
+            <li><p><strong>🎵 Share Your Passion:</strong> Express yourself by creating posts and tagging them with your favorite genres. Spark conversations, share your thoughts, and let the world see what music means to you.</li></p>
+            <li><p><strong>🌟 Discover Events and Festivals:</strong> Explore a curated list of concerts and festivals tailored to your music preferences. Whether you're into indie jams, classical symphonies, or underground techno beats, find the events that resonate with your vibe.</li></p>
+            <li><p><strong>💬 Connect with the Community:</strong> Browse posts, comments, and likes from other music enthusiasts. See what’s trending, join the buzz, and find your tribe.</li></p>
+            <li><p><strong>📍 Attend and Explore:</strong> Mark yourself as attending concerts or festivals, search events based on genre or location, and see who else is going. Never miss out on an event that matches your musical taste.</li></p>
+            <li><p><strong>🔍 Find Your Favorites:</strong> Use our powerful search to find musicians, users, festivals, and concerts that match your style. It’s never been easier to connect with people who share your love for music.</li></p>
+        </ul>
+        <br>
+        <h2>Why Note Along?</h2>
+        <ul>
+            <li><p><strong>Tailored for You:</strong> Your music preferences guide what you see, ensuring a personalized experience every time.</p></li>
+            <li><p><strong>Community-Driven:</strong> Engage with real people who share your love for music. From musicians to fellow fans, everyone’s welcome.</p></li>
+            <li><p><strong>Built with Love:</strong> We’re music lovers, just like you. Note Along was designed to amplify the joy of music for everyone.</p></li>
+        </ul>
+        <br>
+        <h2><a href="{% url 'signup' %}">Join Us</a></h2>
+        <br>
+        <p>
+            Dive into the rhythm of connection and creativity. Join Note Along today and take your love for music to the next level. 
+            Because the best moments in life? They’re better when shared.
+        </p>
     </div>
-    <footer class="footer">
-        <p>&copy; 2024 NoteAlong. All rights reserved.</p>
-    </footer>
-
 {% endblock %}

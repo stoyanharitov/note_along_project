@@ -9,10 +9,17 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+        widgets = {
+            'username': forms.TextInput(attrs={'placeholder': 'Put your desired username here...'}),
+            'email': forms.TextInput(attrs={'placeholder': 'Put your email address here...'}),
+            'password1': forms.TextInput(attrs={'placeholder': 'Put your desired password here...'}),
+            'password2': forms.TextInput(attrs={'placeholder': 'Repeat your password here...'}),
+        }
+
 
 
 class ProfileEditForm(forms.ModelForm):
-    # first I add fields for the first and last name
+    # First I add fields for the first and last name
     first_name = forms.CharField(max_length=30, required=False)
     last_name = forms.CharField(max_length=30, required=False)
     email = forms.EmailField(required=True)
@@ -22,6 +29,10 @@ class ProfileEditForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'age', 'city', 'music_genre_preferences', 'profile_pic']
         widgets = {
             'music_genre_preferences': forms.CheckboxSelectMultiple(),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Put your first name here...'}),
+            'email': forms.TextInput(attrs={'placeholder': 'Put your email address here...'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Put your last name here...'}),
+            'city': forms.TextInput(attrs={'placeholder': 'Enter your city here...'}),
         }
 
 

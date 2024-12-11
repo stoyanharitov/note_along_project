@@ -9,9 +9,11 @@ class EmailOrUsernameLoginBackend(ModelBackend):
             username = kwargs.get(UserModel.USERNAME_FIELD)
 
         try:
-            user = UserModel.objects.get(email=username)
+            users = UserModel.objects.filter(email=username)
         except UserModel.DoesNotExist:
             return None
 
-        if user.check_password(password) and self.user_can_authenticate(user):
-            return user
+        for user in users:
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
+        return None

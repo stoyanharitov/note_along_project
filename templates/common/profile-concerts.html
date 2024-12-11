@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
-
 {% block content %}
+    
+    <div class="about-container">
   <h1>Concerts you are attending</h1>
     {% if user.profile.is_musician %}
-    <a href="{% url 'concert-create' %}" class="btn btn-primary">Create a New Concert</a>
+    <p><a href="{% url 'concert-create' %}" class="btn btn-primary">Create a New Concert</a></p>
     {% endif %}
+    
+    {% if concerts %}
   <ul>
     {% for concert in concerts %}
       <li>
           <h2><a href="{% url 'profile-other' concert.musician.username %}">{{ concert.musician }}</a>'s <a href="{% url 'concert-details' concert.id %}">{{ concert.title }}</a></h2>
+          <br>
           <p>- {{ concert.date }} at {{ concert.location }}</p>
             <p>
                 <strong>Genres:</strong> 
@@ -22,12 +26,18 @@
             </p>
           <p>Concertgoers: {{ concert.concertgoers.count }}</p>
           {% if user.profile.is_musician and concert.musician == user %}
-              <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
-              <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
+              <div class="btn-group">
+                  <a href="{% url 'concert-edit' concert.id %}" class="btn btn-primary">Edit</a>
+                  <a href="{% url 'concert-delete' concert.id %}" class="btn btn-primary">Delete</a>
+              </div>
           {% endif %}
       </li>
-        {% empty %}
-        <li><p>Seems like you are not attending any concerts.</p></li>
     {% endfor %}
   </ul>
+ {% include 'common/pagination.html' %}
+    {% else %}
+    <br>
+    <p>It seems like you haven't joined any concerts yet.</p>
+    {% endif %}
+    </div>
 {% endblock %}
