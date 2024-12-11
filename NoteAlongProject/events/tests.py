@@ -23,8 +23,8 @@ class ConcertsDashboardViewTest(TestCase):
             is_musician=True
         )
 
-        self.genre_rock = Genre.objects.create(name='Rock')
-        self.genre_jazz = Genre.objects.create(name='Jazz')
+        self.genre_rock = Genre.objects.create(name='Rockzz')
+        self.genre_jazz = Genre.objects.create(name='Jazzzzz')
 
         self.naive_datetime = timezone.datetime(2025, 12, 15, 20, 0, 0)
         self.aware_datetime = timezone.make_aware(self.naive_datetime, timezone.get_current_timezone())
