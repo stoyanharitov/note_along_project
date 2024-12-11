@@ -3,6 +3,7 @@
 {% load static %}
     <div class="about-container">
 <h1>{{ post.title }}</h1>
+    <br>
     <h3>By <a href="{% url 'profile-other' post.author.username %}">{{ post.author.username }}</a> | {{ post.created_at }}</h3>
     <br>
     <p>- {{ post.content }}</p>
@@ -29,8 +30,14 @@
 <ul>
     {% for comment in comments %}
         <div class="comment" id="comment-{{ comment.id }}">
-            <li class="comment-li"><p><strong>{{ comment.author.username }}</strong>:</p><br> 
-                <p class="comment-content">- {{ comment.content }}<p></li>
+            <li class="comment-li">
+                <p>
+                    <strong><a href="{% url 'profile-other' comment.author.username %}">{{ comment.author.username }}</a>
+                    </strong>
+                    :
+                </p><br> 
+                <p class="comment-content">- {{ comment.content }}<p>
+            </li>
             
             {% if comment.author == user %}
                 <!-- Edit Button -->

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+    {% load static %}
     <div class="profile-container">
     {% if profile.user.first_name and profile.user.last_name %}
         <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}'s Profile</h1>
@@ -13,9 +14,10 @@
     {% endif %}
     
     {% if profile.profile_pic %}
-        <img src="{{ profile.profile_pic }}" alt="Profile Picture" width="150" height="150">
+        <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" width="150" height="150">
     {% else %}
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="Profile Picture" width="150" height="150">
+{#        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="Profile Picture" width="150" height="150">#}
+        <img src="{% static 'images/Default_pfp.jpg' %}"alt="Profile Picture" width="150" height="150">
     {% endif %}
         {% if not profile.user.last_name %}
             <p><strong>Username:</strong> {{ profile.user.username }}</p>

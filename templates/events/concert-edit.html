@@ -8,7 +8,7 @@
         <button type="submit">Update</button>
     </form>
     <button>
-        <a href="{% url 'concert-details' concert.id %}">Cancel</a>
+        <a href="{% url 'concert-details' concert.id %}" class="btn btn-primary">Cancel</a>
     </button>
     <script src="{% static 'js/multicheck-box-func.js' %}"></script>
 {% endblock %}

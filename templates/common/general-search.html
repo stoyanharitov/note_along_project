@@ -3,8 +3,9 @@
     {% load get_model_name %}
 <div class="about-container">
 <h2>Search Results</h2>
-
+<br>
 {% if results %}
+    <p>Total results: <strong>{{ total_results }}</strong></p>
     <ul>
         {% for result in results %}
             <li>
@@ -62,9 +63,39 @@
             </li>
         {% endfor %}
     </ul>
-    {% include 'common/pagination.html' %}
+    
+    <!-- Pagination -->
+{% if is_paginated %}
+    <div class="pagination">
+        <ul>
+            <!-- "Previous" button -->
+            {% if page_obj.has_previous %}
+                <li><a href="?query={{ query }}&category={{ category }}&page=1">&laquo; First</a></li>
+                <li><a href="?query={{ query }}&category={{ category }}&page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+        
+            <!-- Numbered page links -->
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="active"><span>{{ num }}</span></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li><a href="?query={{ query }}&category={{ category }}&page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+        
+            <!-- "Next" button -->
+            {% if page_obj.has_next %}
+                <li><a href="?query={{ query }}&category={{ category }}&page={{ page_obj.next_page_number }}">Next</a></li>
+                <li><a href="?query={{ query }}&category={{ category }}&page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}
 {% else %}
+    <br>
+    <br>
     <p>No results found for "{{ query }}" in the selected category.</p>
 {% endif %}
 </div>
+    
 {% endblock %}

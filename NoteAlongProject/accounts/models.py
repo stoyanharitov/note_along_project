@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, MinValueValidator
+from cloudinary.models import CloudinaryField
 
 
 UserModel = get_user_model()
@@ -18,7 +19,8 @@ class Profile(models.Model):
                             blank=True,
                             validators = [MinLengthValidator(5)])
     music_genre_preferences = models.ManyToManyField(to='Genre', blank=True)
-    profile_pic = models.URLField(blank=True, null=True)
+    profile_pic = CloudinaryField('image', folder='media', blank=True, null=True)
+    # profile_pic = models.URLField(blank=True, null=True)
     is_musician = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -39,8 +41,6 @@ class Profile(models.Model):
         super(Profile, self).save(*args, **kwargs)
 
 
-
-# need to create a custom migration for the genres in choices file
 class Genre(models.Model):
     name = models.CharField(max_length=50,
                             null = False,

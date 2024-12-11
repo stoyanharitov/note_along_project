@@ -73,7 +73,12 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
         return self.request.user.profile
 
     def form_valid(self, form):
-        form.save()
+        profile = form.save(commit=False)
+
+        if self.request.FILES:
+            profile.profile_pic = self.request.FILES.get('profile_pic')
+
+        profile.save()
 
         return redirect('profile-details')
 

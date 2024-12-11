@@ -1,3 +1,198 @@
+Note Along Music Project
+
+Welcome to the Note Along App Project! 🎶 This Django-based application allows users to explore music-related events, such as concerts and festivals, based on their favorite genres. Users can also interact with others through posts, comments, and likes, and discover musicians or connect with fellow music enthusiasts.
+
+
+📖 Overview
+
+The Note Along is a platform where:
+
+Users can discover concerts and festivals based on their music genre preferences.
+
+Users can mark attendance at events and see who else is attending.
+
+Users can create posts, share their favorite music, and interact with others through comments and likes.
+
+Musicians can showcase their profiles and interact with their audience.
+
+Key Technologies:
+
+Django (Version: 5.1.3)
+
+Python (Version: 3.12)
+
+Database: PostgreSQL with psycopg2 as the adapter
+
+Media Storage: Cloudinary
+
+Decouple: For secure handling of sensitive information (environment variables)
+
+Browsers Tested On: Chromium-based browsers like Google Chrome and Avast Secure Browser
+
+Developed On: PyCharm Professional
+
+
+🚀 Getting Started
+
+Prerequisites
+
+Ensure you have the following installed:
+
+Python (Version: 3.12)
+
+PostgreSQL
+
+Git
+
+Installation Steps
+
+Clone the Repository
+
+git clone <repository-url>
+cd <repository-folder>
+
+Install Dependencies
+Install all required Python packages from requirements.txt:
+
+pip install -r requirements.txt
+
+Configure Environment Variables
+
+A .env.template file is included in the repository for reference.
+
+Replace placeholder values with actual credentials and save the file as .env.
+
+A Google Doc with the required details will be provided here: https://docs.google.com/document/d/1Z3CB9aTzKArfaPrKY4y38-9WOSFmixcE7N5DTpPNd4M/edit?usp=sharing
+
+Database Setup
+
+Create a new PostgreSQL database.
+
+Update your .env file with the database credentials.
+
+Run the following commands to apply migrations:
+
+python manage.py makemigrations
+python manage.py migrate
+
+Handle Manual Migration
+
+A manual migration is included to populate the Genre model with 20 unique genres in the 'accounts' app.
+
+Migration File Name: '0006_populate_genre.py'
+
+To apply migrations:
+
+python manage.py migrate
+
+If migrations fail, remove them:
+
+python manage.py migrate accounts zero
+python manage.py makemigrations accounts
+python manage.py migrate
+
+Use the caller.py script to populate genres as a backup.
+
+Run the Application
+
+python manage.py runserver
+
+Access the application at http://127.0.0.1:8000/.
+
+
+📂 Project Structure and Functionality
+
+Apps
+
+Accounts
+
+Handles user registration, login, and profile management.
+
+Users can update their profiles and select music genre preferences and other bio metrics.
+
+Events
+
+Discover concerts and festivals via their respective dashboards
+
+Mark attendance and see who else is attending.
+
+Posts
+
+Create and interact with music-related posts.
+
+Like and comment on others' posts.
+
+Search
+
+Search for musicians, users, events, or posts.
+
+
+Notable Features
+
+Cloudinary Integration: Handles profile picture uploads and other media.
+
+Pagination: Provides smooth navigation through long lists of posts, users, or events.
+
+Secure Handling of Sensitive Data: Through decouple and .env file usage.
+
+
+🔎 Exploring the Project
+
+Start by Registering:
+
+Create an account and set up your profile.
+
+Select your music genre preferences to customize your experience.
+
+
+Browse Events:
+
+Find concerts or festivals that match your taste.
+
+Mark attendance and review with others attending the event.
+
+Interact Through Posts:
+
+Share your favorite music moments and engage with the community.
+
+Discover Musicians:
+
+Review musician profiles and their work.
+
+
+🛠️ Future Development
+
+Planned features include:
+
+Enhanced search capabilities with more filters.
+
+Support for creating and managing user-organized events.
+
+Improvement on the overall CSS design of the project.
+
+Mobile-responsive design for improved usability.
+
+Event calendar for attendance management and review - FullCalendar.js
+
+User and Musician follow system with direct messaging capabilities
+
+A more robust media handling with enhanced posts and listings that support multiple file extensions
+
+Options for a deper user personal Profile page personalization
+
+
+
+
+📝 Notes
+
+If you encounter any issues or have suggestions, feel free to reach out via GitHub or email at stoyanharitov@gmail.com.
+
+Thank you for exploring my Note Along Project! 🎵
+
+
+
+
+
 #Note Along 🎵
 
 Note Along is a Django-based web application where users can explore music genres, post about their favorite bands, find festivals, and manage personal calendars for events they're attending.
