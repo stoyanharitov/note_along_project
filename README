@@ -13,8 +13,8 @@ The Note Along is a platform where:
 
 ### Key Technologies:
 
-- **Django** (Version: Add here)
-- **Python** (Version: Add here)
+- **Django** (Version: 5.13)
+- **Python** (Version: 3.12)
 - **Database:** PostgreSQL with `psycopg2` as the adapter
 - **Media Storage:** Cloudinary
 - **Decouple:** For secure handling of sensitive information (environment variables)
@@ -29,7 +29,7 @@ The Note Along is a platform where:
 
 Ensure you have the following installed:
 
-1. Python (Version: Add here)
+1. Python (3.12)
 2. PostgreSQL
 3. Git
 
@@ -52,7 +52,7 @@ Ensure you have the following installed:
 
    - A `.env.template` file is included in the repository for reference.
    - Replace placeholder values with actual credentials and save the file as `.env`.
-   - A Google Doc with the required details will be provided here: [Add link here]
+   - A Google Doc with the required details will be provided here: https://docs.google.com/document/d/1Z3CB9aTzKArfaPrKY4y38-9WOSFmixcE7N5DTpPNd4M/edit?tab=t.0
 
 4. **Database Setup**
 
@@ -67,7 +67,7 @@ Ensure you have the following installed:
 5. **Handle Manual Migration**
 
    - A manual migration is included to populate the `Genre` model with 20 unique genres.
-   - Migration Name: [Add migration name here]
+   - Migration Name: 0006_populate_genre.py
    - To apply migrations:
      ```bash
      python manage.py migrate
@@ -97,19 +97,44 @@ Ensure you have the following installed:
 1. **Accounts**
    - Handles user registration, login, and profile management.
    - Users can update their profiles and select music genre preferences.
+
+- The Django User is exended with a Profile model that is linke with a 1-to-1 relationship.
+- Unauthenticated users can only review the index page and the about page.
+- There are 3 types of users. Superadmin, normal user and a musicians. The Superadmin can turn the User's Profile field is_musician=True in /admin/.
+- A musician is automatically granted a staff custom permission group. They can enter /admin/ which has all models registered and customized, but they can edit only concerts.
+- Outside of /admin/ they can create and modify their concerts as well, review other user attendance to concerts and festivals posts, create posts, like, share, comment, like comments, search or all major project models and modify their profile.
+- A normal user can join concerts, but cannot create concerts and can do all the other things that the Musician can with CRUD access only to their profile and what they have created.
+- There are tests set up for Accounts. 
+- The user can reset their password as well with a confirmation email set up with an SMTP server.
+- When a user tries to delete their user, it does not get delete - is_active gets switched to False and an asynchronous function sets a timer for 30 days. If is_active is not turned to True by the end - the user is deleted.
+- Custom login logic with backends applied to handle errors and login with username or email.
+
+
 2. **Events**
    - Discover concerts and festivals.
    - Mark attendance and see who else is attending.
+
+- When a concert is created - the musician will receive a confirmation email with a asynchronous send email to their addess. 
+- The conncerts can be added to Festivals only by a Superadmin in /admin/.
+- Festivals can only be created and modified by Superadmins.
+- There are tests set up for Events.
+- Custom JS functions implemented for UX for expanding a list of concertgoers.
+- Custom forms used for the App.
+
 3. **Posts**
    - Create and interact with music-related posts.
    - Like and comment on others' posts.
+
+- Custom JS functions implemented for UX for features like - like buttons and commenting and editing comments.
+- Custom forms used for the App.
+
 4. **Search**
    - Search for musicians, users, events, or posts using advanced filters.
 
 ### Notable Features
 
 - **Cloudinary Integration:** Handles profile picture uploads and other media.
-- **Pagination:** Provides smooth navigation through long lists of posts, users, or events.
+- **Pagination:** Provides smooth navigation through long lists of posts, users, or events, handling out of range pages.
 - **Secure Handling of Sensitive Data:** Through `decouple` and `.env` file usage.
 
 ---
@@ -146,5 +171,5 @@ Planned features include:
 
 - If you encounter any issues or have suggestions, feel free to reach out via GitHub or email at `stoyanharitov@gmail.com`.
 
-Thank you for exploring the Music App Project! 🎵
+Thank you for exploring the Note Along Project! 🎵
 
