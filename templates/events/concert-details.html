@@ -4,7 +4,8 @@
     {% load static %}
     {% load exclude_user_from_q %}
     <div class="about-container">
-  <h1>{{ concert.musician }}'s {{ concert.title }}</h1>
+        <h1><a href="{% url 'profile-other' concert.musician %}">{{ concert.musician }}</a>'s {{ concert.title }}</h1>
+    <br>
   <p><strong>Date:</strong> {{ concert.date }}</p>
   <p><strong>Location:</strong> {{ concert.location }}</p>
   <p><strong>Genres:</strong> 

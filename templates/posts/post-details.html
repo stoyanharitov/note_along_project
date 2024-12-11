@@ -8,7 +8,12 @@
     <br>
     <p>- {{ post.content }}</p>
     <br>
-    
+    <p><strong>Genres:</strong>
+        {% for genre in post.genres.all %}
+            <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            <span> N/A</span>
+        {% endfor %}
 {% if user.is_authenticated %}
     <button class="like-btn" data-post-id="{{ post.id }}" data-url="{% url 'like-post' %}">
         <i class="fa fa-heart{% if request.user in post.likes.all %} liked{% endif %}"></i>
@@ -16,6 +21,7 @@
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     </button>
 {% endif %}
+
     {% if post.author == user %}
         <div class="btn-group">
             <a href="{% url 'post-edit' post.pk %}" class="btn btn-primary">Edit</a>

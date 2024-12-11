@@ -94,7 +94,7 @@ def search_results(request):
             Q(content__icontains=query) |
             Q(author__username__icontains=query) |
             Q(genres__name__icontains=query)
-        ).distinct().order_by('created_at', 'title')
+        ).distinct().order_by('-created_at', 'title')
 
     elif category == 'concerts':
         results = Concert.objects.filter(

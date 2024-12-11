@@ -18,7 +18,7 @@ class IndexView(PaginationMixin, ListView):
             user_genres = self.request.user.profile.music_genre_preferences.all()
 
             return (Post.objects.filter(genres__in=user_genres).
-                    distinct().order_by('created_at'))
+                    distinct().order_by('-created_at'))
         else:
             return Post.objects.none()
 

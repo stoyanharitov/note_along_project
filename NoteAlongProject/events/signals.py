@@ -32,6 +32,8 @@ async def send_concert_creation_email(sender, instance, created, **kwargs):
         html_message = render_to_string('email/concert-creation-confirmation.html', context)
         plain_message = strip_tags(html_message)
 
+        print('Confirmation email sent.')
+
         try:
             # Send the email asynchronously
             await sync_to_async(send_mail)(

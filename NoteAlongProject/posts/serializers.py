@@ -29,6 +29,18 @@ class PostSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         return [user.username for user in obj.likes.all()]
 
+    def create(self, validated_data):
+        genres_data = validated_data.pop('genres_id', [])
+        post = super().create(validated_data)
+
+        post.genres.set(genres_data)
+        post.save()
+
+        post.author = self.context['request'].user
+        post.save()
+
+        return post
+
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)

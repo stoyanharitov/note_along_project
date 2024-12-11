@@ -20,7 +20,6 @@ class Profile(models.Model):
                             validators = [MinLengthValidator(5)])
     music_genre_preferences = models.ManyToManyField(to='Genre', blank=True)
     profile_pic = CloudinaryField('image', folder='media', blank=True, null=True)
-    # profile_pic = models.URLField(blank=True, null=True)
     is_musician = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):

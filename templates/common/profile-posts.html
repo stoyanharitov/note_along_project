@@ -3,13 +3,19 @@
     <div class="about-container">
 {% if posts %}
         <h1>Here is what you've posted</h1>
-        <ul>
+        <div class="btn-group">
+            <button>
+                <a href="{% url 'post-create' %}" class="btn btn-primary">Create a post</a>
+            </button>
+        </div>
+    <ul>
         {% for post in posts %}
             <li>
                 <h3>{{ post.title }}</h3>
             <br>
                 <p>- {{ post.content }}</p>
             <br>
+                <p>{{ post.created_at }}</p>
                 <p><strong>Genres:</strong>
                     {% for genre in post.genres.all %}
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}

@@ -12,6 +12,7 @@
                 {% if result|to_class_name == 'User' %}
                     <h3><strong><a href="{% url 'profile-other' result.username %}">{{ result.username }}</a></strong></h3>
                     <br>
+                     {% if result.profile.is_musician %}<p>Musician</p>{% endif %}
                     <p>Location: {% if not result.profile.city %} N/A {% else %} {{ result.profile.city }} {% endif %}</p>
                     <p>Age: {% if not result.profile.age %} N/A {% else %} {{ result.profile.age }} {% endif %}</p>
                     <p><strong>Genres:</strong>
@@ -26,6 +27,7 @@
                     <h2>Post title: <a href="{% url 'post-details' result.pk %}">{{ result.title }}</a></h2>
                     <br>
                     <p>By: <a href="{% url 'profile-other' result.author.username %}">{{ result.author.username }}</a></p>
+                    <p>{{ result.created_at }}</p>
                     <p><strong>Genres:</strong>
                     {% for genre in result.genres.all %}
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}

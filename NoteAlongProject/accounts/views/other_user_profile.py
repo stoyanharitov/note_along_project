@@ -1,14 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView, UpdateView, ListView, TemplateView, CreateView
+from django.views.generic import ListView, TemplateView
 from django.urls import reverse_lazy
-from NoteAlongProject.accounts.forms import SignupForm, ProfileEditForm
-from django.contrib.auth.views import LoginView
-from django.contrib.auth import logout
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-from django.http import HttpResponseForbidden
 
 from NoteAlongProject.events.models import Concert, Festival
 from NoteAlongProject.accounts.models import Profile
@@ -70,7 +65,7 @@ class OtherUserProfilePostsView(LoginRequiredMixin, PaginationMixin, ListView):
 
     def get_queryset(self):
         return (Post.objects.filter(author=self.profile.user)
-                .order_by('created_at'))
+                .order_by('-created_at'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

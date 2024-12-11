@@ -220,6 +220,15 @@ button.like-btn:hover {
     background: rebeccapurple; /* Red for emphasis */
     color: #fff;
 }
+
+a {
+    color: lightpink; /* Light gray color */
+    text-decoration: none; /* Removes the underline */
+}
+
+a:hover, a:focus {
+    color: #b0b0b0; /* Slightly darker gray on hover/focus (optional) */
+}
 /*}*/
 
 /*!* Pagination *!*/

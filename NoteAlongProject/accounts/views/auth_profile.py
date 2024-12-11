@@ -80,6 +80,9 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
         profile.save()
 
+        if 'music_genre_preferences' in form.cleaned_data:
+            profile.music_genre_preferences.set(form.cleaned_data['music_genre_preferences'])
+
         return redirect('profile-details')
 
 
@@ -114,7 +117,7 @@ class UserOwnPostsView(LoginRequiredMixin, PaginationMixin, ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return Post.objects.filter(author__exact=self.request.user).order_by('created_at')
+            return Post.objects.filter(author__exact=self.request.user).order_by('-created_at')
         else:
             return Post.objects.none()
 

@@ -24,9 +24,12 @@
                 <p>- {{ post.content }}</p>
             <br>
                 <p>Author: <a href="{% url 'profile-other' post.author.username %}">{{ post.author.username}}</a></p>
+                <p>{{ post.created_at }}</p>
                 <p><strong>Genres:</strong>
                     {% for genre in post.genres.all %}
                         <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                        <span> N/A</span>
                     {% endfor %}
                 </p>
                 {% if post.comments.all %}
